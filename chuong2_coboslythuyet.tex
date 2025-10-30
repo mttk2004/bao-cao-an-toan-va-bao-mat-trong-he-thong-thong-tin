@@ -1,0 +1,34 @@
+\chapter{CƠ SỞ LÝ THUYẾT}
+
+\section{Mật mã học cơ bản}
+\subsection{Mã hóa đối xứng (Symmetric-key Cryptography)}
+Mã hóa đối xứng là phương pháp mã hóa và giải mã dữ liệu sử dụng cùng một khóa bí mật. Tính đơn giản và tốc độ xử lý nhanh làm cho nó trở thành lựa chọn phổ biến để mã hóa lượng lớn dữ liệu.
+
+\subsection{Thuật toán AES (Advanced Encryption Standard)}
+AES là một thuật toán mã hóa khối đối xứng được sử dụng rộng rãi trên toàn thế giới. AES hỗ trợ các kích thước khóa 128, 192, và 256 bit. Trong đồ án này, chúng em sử dụng AES-256-GCM.
+\begin{itemize}
+    \item \textbf{AES-256:} Sử dụng khóa có độ dài 256 bit, cung cấp mức độ bảo mật cao nhất trong các phiên bản AES.
+    \item \textbf{GCM (Galois/Counter Mode):} Là một chế độ hoạt động của AES, cung cấp cả tính bảo mật (confidentiality) thông qua mã hóa và tính toàn vẹn dữ liệu (integrity) thông qua mã xác thực (authentication tag).
+\end{itemize}
+
+\section{Hàm băm và PBKDF2}
+\subsection{Hàm băm mật mã (Cryptographic Hash Functions)}
+Hàm băm mật mã là một hàm toán học ánh xạ dữ liệu có kích thước tùy ý đến một giá trị băm (hash value) có kích thước cố định. Đặc tính quan trọng là khó đảo ngược (one-way) và nhạy cảm với thay đổi nhỏ trong dữ liệu đầu vào.
+
+\subsection{PBKDF2 (Password-Based Key Derivation Function 2)}
+PBKDF2 là một thuật toán dẫn xuất khóa dựa trên mật khẩu, được thiết kế để làm chậm quá trình brute-force tấn công vào mật khẩu. Nó thực hiện nhiều vòng lặp của một hàm băm mật mã lên mật khẩu và một giá trị salt, tạo ra một khóa mã hóa mạnh.
+\begin{itemize}
+    \item \textbf{Salt (Muối):} Một giá trị ngẫu nhiên duy nhất được thêm vào mật khẩu trước khi băm, ngăn chặn các cuộc tấn công rainbow table.
+    \item \textbf{Iterations (Số vòng lặp):} Số lần hàm băm được thực hiện. Số vòng lặp càng cao, thời gian băm càng lâu, làm tăng chi phí tính toán cho kẻ tấn công. AuraCrypt sử dụng 480,000 vòng lặp.
+\end{itemize}
+
+\section{Các công nghệ sử dụng}
+\subsection{Python}
+Python là ngôn ngữ lập trình đa năng, mạnh mẽ, được lựa chọn vì cú pháp rõ ràng, thư viện phong phú và cộng đồng lớn.
+\subsection{Flet Framework}
+Flet là một framework cho phép xây dựng các ứng dụng web, desktop và mobile bằng Python. Flet giúp tạo giao diện người dùng hiện đại và đẹp mắt một cách nhanh chóng.
+\subsection{Thư viện Cryptography (Python)}
+Đây là thư viện cung cấp các công cụ mã hóa mạnh mẽ và an toàn, bao gồm việc triển khai AES-256-GCM và PBKDF2, đảm bảo tính bảo mật cho AuraCrypt.
+\subsection{Thư viện `winshell` và `pywin32` (Windows)}
+Các thư viện này được sử dụng để tương tác sâu với hệ điều hành Windows, đặc biệt là trong việc tạo desktop shortcut và quản lý các tác vụ hệ thống.
+\newpage

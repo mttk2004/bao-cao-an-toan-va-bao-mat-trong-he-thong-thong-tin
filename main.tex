@@ -1,0 +1,148 @@
+\documentclass[11pt, a4paper]{report}
+
+% --- CÀI ĐẶT UNIVERSAL PREAMBLE ---
+% Gói này rất quan trọng để hỗ trợ tiếng Việt
+\usepackage{fontspec} % Cho phép chọn font
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+
+% Cấu hình lề giấy
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+
+\usepackage{array}
+\usepackage{longtable}
+% \usepackage{geometry} % Đã định nghĩa ở trên, có thể bỏ dòng này
+% \geometry{a4paper, margin=1in} % Đã định nghĩa ở trên, có thể bỏ dòng này
+\usepackage{booktabs} % Cho toprule, midrule, bottomrule
+\usepackage{amsmath} % Gói toán học cơ bản, đôi khi cần cho các ký tự
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem} % Để tùy chỉnh list (gạch đầu dòng)
+\usepackage{float}    % Để tùy chỉnh vị trí hình ảnh và bảng
+
+% Chọn font Times New Roman cho chữ chính và JetBrains Mono cho code
+\setmainfont{Times New Roman}
+\setmonofont{JetBrains Mono}[Scale=0.9]
+
+% Định nghĩa font riêng cho listings
+\newfontfamily\listingsfont{JetBrains Mono}[Scale=0.9]
+
+% Sửa lỗi hiển thị gạch đầu dòng (list bullets)
+% \setlist[itemize]{label=-} % Lỗi này thường không xảy ra với polyglossia và fontspec, có thể bỏ nếu không cần thiết.
+
+% --- CÁC GÓI BỔ SUNG CHO BÁO CÁO NÀY ---
+\usepackage{graphicx}     % Để chèn hình ảnh (biểu đồ)
+% \usepackage{booktabs}     % Đã khai báo ở trên
+\usepackage{listings}     % Để chèn code Java (bạn sẽ dùng Python)
+\usepackage{xcolor}       % Để định nghĩa màu cho code
+\usepackage[unicode=true]{hyperref} % Để hỗ trợ tiếng Việt trong PDF bookmarks, nên đặt cuối cùng
+
+% Cấu hình màu sắc cho code listing
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.98,0.98,0.98}
+
+% Cấu hình style cho code Python với XeLaTeX
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta}, % Hoặc màu khác cho Python keywords
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\listingsfont\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    language=Python % <-- CHỈ ĐỊNH NGÔN NGỮ LẬP TRÌNH LÀ Python
+}
+
+% Cấu hình chung cho listings
+\lstset{style=mystyle}
+
+% --- BẮT ĐẦU TÀI LIỆU ---
+\begin{document}
+
+% --- TRANG BÌA ---
+\begin{titlepage}
+    \centering
+    \sffamily
+
+    {\Large ỦY BAN NHÂN DÂN THÀNH PHỐ HỒ CHÍ MINH\par}
+    {\LARGE \textbf{TRƯỜNG ĐẠI HỌC SÀI GÒN}\par}
+    {\Large \textbf{KHOA CÔNG NGHỆ THÔNG TIN}\par}
+    \vspace{1cm}
+
+    \includegraphics[width=0.3\textwidth]{images/logo_sgu.png}
+
+    \vfill
+
+    {\Huge \textbf{BÁO CÁO}}\par
+    \vspace{0.5cm}
+    {\Large HỌC PHẦN: AN TOÀN VÀ BẢO MẬT DỮ LIỆU TRONG HỆ THỐNG THÔNG TIN}\par
+    
+    \vspace{1cm}
+    {\Huge \textbf{PHẦN MỀM QUẢN LÝ MẬT KHẨU AN TOÀN}}\par
+
+    \vfill
+
+    \begin{flushright}
+    \large
+    \begin{tabular}{ll}
+        \textbf{Giảng viên:} & Trương Tấn Khoa \\
+        \textbf{Nhóm thực hiện:} & 46 \\
+    \end{tabular}
+    \end{flushright}
+
+    \vspace{0.5cm}
+
+    \textbf{\large Danh sách thành viên:}\par
+    \large Mai Trần Tuấn Kiệt – 3122560038\par
+
+    \vfill
+
+    {\large Thành phố Hồ Chí Minh, tháng 11 năm 2025\par}
+\end{titlepage}
+
+% --- ĐÁNH SỐ TRANG RÔ-MA CHO CÁC TRANG MỞ ĐẦU ---
+\pagenumbering{roman}
+\input{loi_cam_on} % Lời cảm ơn (tùy chọn)
+\input{tom_tat}     % Tóm tắt (Abstract)
+% \input{muc_luc}     % Mục lục (nếu muốn một file riêng)
+\tableofcontents % Nếu bạn muốn nó tự động tạo, hãy để đây.
+
+\listoffigures % Danh sách hình ảnh (nếu có nhiều hình)
+\listoftables  % Danh sách bảng biểu (nếu có nhiều bảng)
+\newpage
+
+% --- ĐÁNH SỐ TRANG SỐ CHO NỘI DUNG CHÍNH ---
+\pagenumbering{arabic}
+\setcounter{page}{1} % Bắt đầu lại số trang từ 1
+
+% --- NẠP CÁC CHƯƠNG TỪ CÁC FILE RIÊNG ---
+\input{chuong1_gioithieu}
+\input{chuong2_coboslythuyet}
+\input{chuong3_phantich_thietke}
+\input{chuong4_trienkhai_thu_nghiem}
+\input{chuong5_ketluan_huongphattrien}
+
+% --- PHỤ LỤC (Nếu có) ---
+% \appendix % Bắt đầu phần phụ lục
+% \input{phuluc_a}
+% \input{phuluc_b}
+
+% --- TÀI LIỆU THAM KHẢO ---
+% \nocite{*} % Để hiển thị tất cả các mục trong references.bib ngay cả khi không được trích dẫn
+% \printbibliography % Nếu dùng biblatex
+% Nếu dùng bibtex thủ công:
+% \bibliographystyle{plain}
+% \bibliography{references}
+
+\end{document}
