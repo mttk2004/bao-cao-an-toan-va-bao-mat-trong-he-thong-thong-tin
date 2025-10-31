@@ -1,5 +1,5 @@
 # utils/shortcut_manager.py
-# Module để quản lý việc tạo desktop shortcut cho Windows
+# Module to manage creation of desktop shortcuts for Windows
 
 import os
 import sys
@@ -11,14 +11,12 @@ from typing import Optional
 try:
     import winshell
     from win32com.client import Dispatch
-    # --- PHẦN SỬA LỖI QUAN TRỌNG ---
     import pythoncom
-    # --- KẾT THÚC SỬA LỖI ---
     WINSHELL_AVAILABLE = True
 except ImportError:
     winshell = None
     Dispatch = None
-    pythoncom = None # Thêm dòng này để an toàn
+    pythoncom = None
     WINSHELL_AVAILABLE = False
 
 try:
@@ -30,8 +28,8 @@ except ImportError:
 
 class ShortcutManager:
     """
-    Quản lý việc tạo và kiểm tra desktop shortcut cho AuraCrypt.
-    Chỉ hoạt động trên Windows và khi winshell được cài đặt.
+    Manage creation and verification of a desktop shortcut for AuraCrypt.
+    Operates only on Windows and when winshell/pywin32 are available.
     """
 
     FIRST_RUN_MARKER = ".firstrun_complete"
@@ -50,7 +48,7 @@ class ShortcutManager:
         self.log_path = self.app_paths.get_app_data_dir() / self.LOG_FILE_NAME
 
     def _log(self, message: str):
-        """Ghi thông báo vào file log."""
+        """Write a message to the debug log file."""
         try:
             with open(self.log_path, 'a', encoding='utf-8') as f:
                 from datetime import datetime
@@ -59,15 +57,19 @@ class ShortcutManager:
             pass
 
     def get_first_run_marker_path(self) -> Path:
-        """Trả về đường dẫn đến file đánh dấu lần chạy đầu tiên."""
+        """Return the path to the first-run marker file."""
         return self.app_paths.get_app_data_dir() / self.FIRST_RUN_MARKER
 
     def is_first_run(self) -> bool:
-        """Kiểm tra xem đây có phải là lần chạy đầu tiên không."""
+        """Check whether this is the application's first run.
+
+        Returns:
+            True if this is the first run (marker file missing), False otherwise.
+        """
         return not self.get_first_run_marker_path().exists()
 
     def mark_first_run_complete(self) -> None:
-        """Tạo file đánh dấu để báo hiệu lần chạy đầu tiên đã hoàn thành."""
+        """Create the marker file indicating first-run setup has completed."""
         try:
             marker_path = self.get_first_run_marker_path()
             marker_path.parent.mkdir(parents=True, exist_ok=True)
@@ -79,7 +81,11 @@ class ShortcutManager:
             self._log(traceback.format_exc())
 
     def get_executable_path(self) -> Optional[str]:
-        """Lấy đường dẫn đến file executable hiện tại."""
+        """Return the path to the current executable or main script.
+
+        If running as a frozen executable (PyInstaller/Flet), returns sys.executable.
+        Otherwise returns the resolved path to the project's main.py script.
+        """
         try:
             if getattr(sys, 'frozen', False):
                 self._log(f"Running as frozen executable. Path: {sys.executable}")
@@ -94,7 +100,10 @@ class ShortcutManager:
             return None
 
     def get_desktop_path(self) -> Optional[Path]:
-        """Lấy đường dẫn đến Desktop của user."""
+        """Return the current user's Desktop path.
+
+        Uses winshell when available; falls back to ~/Desktop if needed.
+        """
         if not self.can_create_shortcuts:
             self._log("Cannot get desktop path: winshell is not available.")
             return None
@@ -108,14 +117,16 @@ class ShortcutManager:
             return None
 
     def create_desktop_shortcut(self) -> bool:
-        """Tạo desktop shortcut cho AuraCrypt."""
+        """Create a desktop shortcut for AuraCrypt.
+
+        Returns True on success, False on failure.
+        """
         self._log("--- Starting shortcut creation process ---")
         if not self.can_create_shortcuts:
             self._log("Aborting: Cannot create shortcuts (not Windows or winshell/pywin32 missing).")
             return False
 
-        # --- PHẦN SỬA LỖI QUAN TRỌNG ---
-        # "Chào hỏi" hệ thống COM của Windows trước khi sử dụng
+        # Initialize the Windows COM subsystem before use
         pythoncom.CoInitialize()
         try:
             executable_path = self.get_executable_path()
@@ -141,13 +152,9 @@ class ShortcutManager:
             shortcut.WorkingDirectory = str(Path(executable_path).parent)
             shortcut.Description = "AuraCrypt - Secure Password Manager"
 
-            # --- PHẦN SỬA LỖI TẠI ĐÂY ---
-            # Thay vì tìm icon_path là file riêng, chúng ta sẽ chỉ dẫn nó đến icon
-            # đã được nhúng trong chính tệp .exe.
-            # Index 0 thường là icon chính của tệp .exe
+            # Use the executable's embedded icon (index 0) instead of a separate icon file.
             shortcut.IconLocation = executable_path + ",0"
             self._log(f"Icon location set to use executable's embedded icon: {executable_path},0")
-            # --- KẾT THÚC SỬA LỖI ---
 
             self._log("Saving shortcut file...")
             shortcut.save()
@@ -159,18 +166,21 @@ class ShortcutManager:
             self._log(f"Full traceback:\n{traceback.format_exc()}")
             return False
         finally:
-            # "Tạm biệt" hệ thống COM để dọn dẹp
+            # Uninitialize the COM subsystem to clean up
             pythoncom.CoUninitialize()
-        # --- KẾT THÚC SỬA LỖI ---
-
 
     def handle_first_run_setup(self):
-        """Xử lý setup cho lần chạy đầu tiên, bao gồm tạo shortcut."""
+        """Perform first-run setup, including shortcut creation.
+
+        This will attempt to create the desktop shortcut and then write the
+        first-run marker file regardless of the shortcut outcome.
+        """
         self._log("Handling first run setup...")
         if self.create_desktop_shortcut():
             self._log("Shortcut creation step successful.")
         else:
             self._log("Shortcut creation step failed.")
 
+        # Always mark first-run complete to avoid repeated attempts
         self.mark_first_run_complete()
         self._log("First run setup process finished.")
