@@ -2,33 +2,70 @@
 
 \section{Mật mã học cơ bản}
 \subsection{Mã hóa đối xứng (Symmetric-key Cryptography)}
-Mã hóa đối xứng là phương pháp mã hóa và giải mã dữ liệu sử dụng cùng một khóa bí mật. Tính đơn giản và tốc độ xử lý nhanh làm cho nó trở thành lựa chọn phổ biến để mã hóa lượng lớn dữ liệu.
+Mã hóa đối xứng, còn được gọi là mã hóa khóa bí mật, là một phương pháp mã hóa trong đó chỉ có một khóa duy nhất được sử dụng cho cả quá trình mã hóa và giải mã dữ liệu. Điều này có nghĩa là bên gửi và bên nhận phải chia sẻ cùng một khóa bí mật trước khi có thể trao đổi thông tin an toàn.
+
+Tính đơn giản và tốc độ xử lý nhanh làm cho nó trở thành lựa chọn phổ biến để mã hóa lượng lớn dữ liệu. Các thuật toán mã hóa đối xứng hiện đại như AES được thiết kế để cực kỳ hiệu quả về mặt tính toán, cho phép mã hóa và giải mã nhanh chóng mà không đòi hỏi nhiều tài nguyên hệ thống.
 
 \subsection{Thuật toán AES (Advanced Encryption Standard)}
-AES là một thuật toán mã hóa khối đối xứng được sử dụng rộng rãi trên toàn thế giới. AES hỗ trợ các kích thước khóa 128, 192, và 256 bit. Trong đồ án này, chúng em sử dụng AES-256-GCM.
+\subsubsection{Lịch sử và Nguồn gốc}
+AES, hay Tiêu chuẩn Mã hóa Nâng cao, là một thuật toán mã hóa khối đối xứng được chính phủ Hoa Kỳ lựa chọn để thay thế cho Tiêu chuẩn Mã hóa Dữ liệu (DES) đã lỗi thời. Vào năm 1997, Viện Tiêu chuẩn và Công nghệ Quốc gia Hoa Kỳ (NIST) đã khởi xướng một cuộc thi toàn cầu để tìm ra một thuật toán mã hóa mới. Sau ba năm đánh giá khắt khe, thuật toán \textbf{Rijndael}, do hai nhà mật mã học người Bỉ là Vincent Rijmen và Joan Daemen phát triển, đã được chọn làm AES vào năm 2001. Kể từ đó, AES đã trở thành một trong những thuật toán mã hóa được sử dụng rộng rãi và đáng tin cậy nhất trên toàn thế giới.
+
+\subsubsection{Ý tưởng hoạt động sơ bộ}
+AES hoạt động trên các khối dữ liệu có kích thước cố định là 128 bit. Thuật toán này xử lý dữ liệu thông qua nhiều vòng (rounds) biến đổi toán học. Số lượng vòng lặp phụ thuộc vào độ dài của khóa được sử dụng:
 \begin{itemize}
-    \item \textbf{AES-256:} Sử dụng khóa có độ dài 256 bit, cung cấp mức độ bảo mật cao nhất trong các phiên bản AES.
-    \item \textbf{GCM (Galois/Counter Mode):} Là một chế độ hoạt động của AES, cung cấp cả tính bảo mật (confidentiality) thông qua mã hóa và tính toàn vẹn dữ liệu (integrity) thông qua mã xác thực (authentication tag).
+    \item \textbf{10 vòng} cho khóa 128 bit.
+    \item \textbf{12 vòng} cho khóa 192 bit.
+    \item \textbf{14 vòng} cho khóa 256 bit.
+\end{itemize}
+Mỗi vòng bao gồm bốn phép biến đổi chính:
+\begin{enumerate}
+    \item \textbf{SubBytes:} Một phép thay thế phi tuyến tính, trong đó mỗi byte của khối dữ liệu được thay thế bằng một byte khác dựa trên một bảng tra cứu (S-box).
+    \item \textbf{ShiftRows:} Một phép hoán vị, trong đó các byte trong mỗi hàng của khối dữ liệu được dịch chuyển vòng một cách có hệ thống.
+    \item \textbf{MixColumns:} Một phép trộn dữ liệu, hoạt động trên các cột của khối dữ liệu, kết hợp bốn byte trong mỗi cột.
+    \item \textbf{AddRoundKey:} Khóa con của vòng hiện tại được kết hợp với khối dữ liệu bằng phép toán XOR.
+\end{enumerate}
+Quá trình này lặp lại cho đến khi hoàn thành đủ số vòng, tạo ra một bản mã phức tạp và khó bị phá vỡ.
+
+\subsubsection{AES-256-GCM được sử dụng trong AuraCrypt}
+Trong đồ án này, tôi sử dụng phiên bản AES-256-GCM, một sự kết hợp mạnh mẽ mang lại cả tính bảo mật và tính toàn vẹn.
+\begin{itemize}
+    \item \textbf{AES-256:} Phiên bản này sử dụng khóa có độ dài 256 bit. Với không gian khóa khổng lồ (2\textasciicircum 256), nó cung cấp mức độ bảo mật cao nhất trong các phiên bản AES và được xem là an toàn trước các cuộc tấn công vét cạn (brute-force) bằng máy tính cổ điển và cả máy tính lượng tử trong tương lai gần.
+    \item \textbf{GCM (Galois/Counter Mode):} Đây không phải là một phần của thuật toán AES cốt lõi mà là một chế độ hoạt động. GCM biến AES từ một mã hóa khối đơn thuần thành một mã hóa luồng có xác thực (AEAD - Authenticated Encryption with Associated Data). Nó không chỉ mã hóa dữ liệu để đảm bảo tính bí mật (confidentiality) mà còn tạo ra một thẻ xác thực (authentication tag). Thẻ này giúp xác minh rằng dữ liệu không bị thay đổi hay giả mạo trong quá trình lưu trữ hoặc truyền đi, đảm bảo tính toàn vẹn (integrity).
+\end{itemize}
+
+\subsubsection{Ứng dụng thực tiễn}
+Nhờ tính bảo mật cao và hiệu suất tốt, AES đã trở thành tiêu chuẩn vàng trong nhiều ứng dụng:
+\begin{itemize}
+    \item \textbf{Bảo mật Web:} Giao thức TLS/SSL sử dụng AES để bảo vệ hàng tỷ kết nối web mỗi ngày (HTTPS).
+    \item \textbf{Mạng không dây:} Tiêu chuẩn bảo mật Wi-Fi WPA2 và WPA3 sử dụng AES để mã hóa lưu lượng mạng.
+    \item \textbf{Mã hóa tệp và ổ đĩa:} Các công cụ như BitLocker (Windows), FileVault (macOS) và VeraCrypt đều dựa trên AES.
+    \item \textbf{Ứng dụng di động:} Các ứng dụng nhắn tin bảo mật như Signal và WhatsApp sử dụng AES để mã hóa tin nhắn đầu cuối.
+    \item \textbf{Lưu trữ đám mây:} Dữ liệu được lưu trữ trên các dịch vụ như Google Drive và Dropbox thường được mã hóa bằng AES.
 \end{itemize}
 
 \section{Hàm băm và PBKDF2}
 \subsection{Hàm băm mật mã (Cryptographic Hash Functions)}
-Hàm băm mật mã là một hàm toán học ánh xạ dữ liệu có kích thước tùy ý đến một giá trị băm (hash value) có kích thước cố định. Đặc tính quan trọng là khó đảo ngược (one-way) và nhạy cảm với thay đổi nhỏ trong dữ liệu đầu vào.
+Hàm băm mật mã là một hàm toán học một chiều, nhận đầu vào là dữ liệu có kích thước bất kỳ và tạo ra một chuỗi đầu ra có kích thước cố định, được gọi là giá trị băm (hash value). Các đặc tính quan trọng nhất của nó bao gồm:
+\begin{itemize}
+    \item \textbf{Tính một chiều (One-way):} Rất khó hoặc gần như không thể đảo ngược quá trình để tìm lại dữ liệu gốc từ giá trị băm.
+    \item \textbf{Kháng va chạm (Collision Resistance):} Rất khó để tìm thấy hai đầu vào khác nhau tạo ra cùng một giá trị băm.
+    \item \textbf{Hiệu ứng thác đổ (Avalanche Effect):} Một thay đổi nhỏ trong dữ liệu đầu vào sẽ tạo ra một giá trị băm hoàn toàn khác biệt.
+\end{itemize}
 
 \subsection{PBKDF2 (Password-Based Key Derivation Function 2)}
-PBKDF2 là một thuật toán dẫn xuất khóa dựa trên mật khẩu, được thiết kế để làm chậm quá trình brute-force tấn công vào mật khẩu. Nó thực hiện nhiều vòng lặp của một hàm băm mật mã lên mật khẩu và một giá trị salt, tạo ra một khóa mã hóa mạnh.
+PBKDF2 là một thuật toán dẫn xuất khóa dựa trên mật khẩu, được thiết kế để làm chậm quá trình tấn công vét cạn vào mật khẩu. Thay vì chỉ băm mật khẩu một lần, PBKDF2 thực hiện nhiều vòng lặp của một hàm băm mật mã (ví dụ: HMAC-SHA256) lên mật khẩu và một giá trị ngẫu nhiên gọi là "muối" (salt), từ đó tạo ra một khóa mã hóa mạnh và an toàn.
 \begin{itemize}
-    \item \textbf{Salt (Muối):} Một giá trị ngẫu nhiên duy nhất được thêm vào mật khẩu trước khi băm, ngăn chặn các cuộc tấn công rainbow table.
-    \item \textbf{Iterations (Số vòng lặp):} Số lần hàm băm được thực hiện. Số vòng lặp càng cao, thời gian băm càng lâu, làm tăng chi phí tính toán cho kẻ tấn công. AuraCrypt sử dụng 480,000 vòng lặp.
+    \item \textbf{Salt (Muối):} Là một giá trị ngẫu nhiên, duy nhất được tạo cho mỗi người dùng và được kết hợp với mật khẩu trước khi băm. Việc sử dụng salt ngăn chặn hiệu quả các cuộc tấn công bảng cầu vồng (rainbow table attacks), vì kẻ tấn công không thể tính toán trước các giá trị băm cho các mật khẩu phổ biến.
+    \item \textbf{Iterations (Số vòng lặp):} Đây là số lần hàm băm được áp dụng lặp đi lặp lại. Số vòng lặp càng cao, thời gian cần thiết để tạo ra khóa càng lâu, do đó làm tăng đáng kể chi phí tính toán cho bất kỳ ai muốn thực hiện một cuộc tấn công vét cạn. AuraCrypt sử dụng 480,000 vòng lặp, một con số phù hợp với các khuyến nghị bảo mật hiện đại.
 \end{itemize}
 
 \section{Các công nghệ sử dụng}
 \subsection{Python}
-Python là ngôn ngữ lập trình đa năng, mạnh mẽ, được lựa chọn vì cú pháp rõ ràng, thư viện phong phú và cộng đồng lớn.
+Python là ngôn ngữ lập trình đa năng, cấp cao, được lựa chọn cho đồ án này vì cú pháp rõ ràng, dễ đọc, cùng với hệ sinh thái thư viện phong phú và một cộng đồng hỗ trợ lớn.
 \subsection{Flet Framework}
-Flet là một framework cho phép xây dựng các ứng dụng web, desktop và mobile bằng Python. Flet giúp tạo giao diện người dùng hiện đại và đẹp mắt một cách nhanh chóng.
+Flet là một framework cho phép các nhà phát triển xây dựng ứng dụng web, desktop và mobile tương tác, thời gian thực bằng ngôn ngữ Python mà không cần có kinh nghiệm phát triển frontend. Flet giúp tạo ra các giao diện người dùng hiện đại và đẹp mắt một cách nhanh chóng và hiệu quả.
 \subsection{Thư viện Cryptography (Python)}
-Đây là thư viện cung cấp các công cụ mã hóa mạnh mẽ và an toàn, bao gồm việc triển khai AES-256-GCM và PBKDF2, đảm bảo tính bảo mật cho AuraCrypt.
+Đây là một thư viện Python cung cấp các công thức và thuật toán mật mã cấp cao, được thiết kế để an toàn và dễ sử dụng. Thư viện này bao gồm các triển khai đã được kiểm chứng của AES-256-GCM và PBKDF2, là nền tảng cốt lõi đảm bảo tính bảo mật cho AuraCrypt.
 \subsection{Thư viện `winshell` và `pywin32` (Windows)}
-Các thư viện này được sử dụng để tương tác sâu với hệ điều hành Windows, đặc biệt là trong việc tạo desktop shortcut và quản lý các tác vụ hệ thống.
+Các thư viện này cung cấp giao diện để tương tác sâu với hệ điều hành Windows từ Python. Trong đồ án này, chúng được sử dụng để triển khai tính năng tự động tạo shortcut trên desktop, mang lại trải nghiệm người dùng liền mạch hơn khi cài đặt và sử dụng ứng dụng lần đầu.
 \newpage
