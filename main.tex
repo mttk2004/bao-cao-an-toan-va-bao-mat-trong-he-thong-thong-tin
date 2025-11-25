@@ -1,8 +1,7 @@
 \documentclass[11pt, a4paper]{report}
 
 % --- CÀI ĐẶT UNIVERSAL PREAMBLE ---
-% Gói này rất quan trọng để hỗ trợ tiếng Việt
-\usepackage{fontspec} % Cho phép chọn font
+\usepackage{fontspec}
 \usepackage{polyglossia}
 \setdefaultlanguage{vietnamese}
 
@@ -11,50 +10,60 @@
 
 \usepackage{array}
 \usepackage{longtable}
-% \usepackage{geometry} % Đã định nghĩa ở trên, có thể bỏ dòng này
-% \geometry{a4paper, margin=1in} % Đã định nghĩa ở trên, có thể bỏ dòng này
-\usepackage{booktabs} % Cho toprule, midrule, bottomrule
-\usepackage{amsmath} % Gói toán học cơ bản, đôi khi cần cho các ký tự
+\usepackage{booktabs}
+\usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{enumitem} % Để tùy chỉnh list (gạch đầu dòng)
-\usepackage{float}    % Để tùy chỉnh vị trí hình ảnh và bảng
+\usepackage{enumitem}
+\usepackage{float}
 
-% Chọn font Times New Roman cho chữ chính và JetBrains Mono cho code
+% Chọn font
 \setmainfont{Times New Roman}
-\setmonofont{JetBrains Mono}[Scale=0.9]
+\setmonofont{JetBrains Mono}[Scale=0.85]
 
 % Định nghĩa font riêng cho listings
-\newfontfamily\listingsfont{JetBrains Mono}[Scale=0.9]
-
-% Sửa lỗi hiển thị gạch đầu dòng (list bullets)
-% \setlist[itemize]{label=-} % Lỗi này thường không xảy ra với polyglossia và fontspec, có thể bỏ nếu không cần thiết.
+\newfontfamily\listingsfont{JetBrains Mono}[Scale=0.85]
 
 % --- CÁC GÓI BỔ SUNG CHO BÁO CÁO NÀY ---
-\usepackage{graphicx}     % Để chèn hình ảnh (biểu đồ)
-% \usepackage{booktabs}     % Đã khai báo ở trên
-\usepackage{listings}     % Để chèn code Java (bạn sẽ dùng Python)
-\usepackage{xcolor}       % Để định nghĩa màu cho code
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
 \usepackage{indentfirst}
 \usepackage{titlesec}
-% Đặt độ dài thụt lề đầu dòng (15pt là giá trị phổ biến)
+
 \setlength{\parindent}{15pt}
-\usepackage[unicode=true]{hyperref} % Để hỗ trợ tiếng Việt trong PDF bookmarks, nên đặt cuối cùng
+\usepackage[unicode=true]{hyperref}
 
-% Cấu hình màu sắc cho code listing
-\definecolor{codegreen}{rgb}{0,0.6,0}
+% Định nghĩa màu sắc chuẩn cho Code (Giống VS Code)
+\definecolor{codegreen}{rgb}{0.28, 0.67, 0.47} % Màu xanh lá dịu
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.98,0.98,0.98}
+\definecolor{codeblue}{rgb}{0.13, 0.47, 0.85} % Màu xanh keyword
+\definecolor{codepurple}{rgb}{0.75, 0.45, 0.85} % Màu tím cho type
+\definecolor{backcolour}{rgb}{0.97, 0.97, 0.97} % Nền xám rất nhạt
 
-% Cấu hình style cho code Python với XeLaTeX
+% --- CẤU HÌNH CODE (TypeScript / React) ---
+\lstdefinelanguage{TypeScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{codeblue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this, interface, type, const, let, async, await, from},
+  ndkeywordstyle=\color{codepurple}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{codegreen}\ttfamily,
+  stringstyle=\color{red!60!black}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},
     commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta}, % Hoặc màu khác cho Python keywords
+    keywordstyle=\color{codeblue}\bfseries,
     numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
-    basicstyle=\listingsfont\footnotesize,
+    stringstyle=\color{red!60!black},
+    basicstyle=\ttfamily\listingsfont\footnotesize,
     breakatwhitespace=false,
     breaklines=true,
     captionpos=b,
@@ -65,10 +74,14 @@
     showstringspaces=false,
     showtabs=false,
     tabsize=2,
-    language=Python % <-- CHỈ ĐỊNH NGÔN NGỮ LẬP TRÌNH LÀ Python
+    frame=single,
+    rulecolor=\color{codegray},
+    language=TypeScript, % Đặt mặc định là TypeScript
+    extendedchars=true,
+    inputencoding=utf8,
+    literate={đ}{{\dj}}1 {Đ}{{\DJ}}1 {á}{{\'a}}1 {à}{{\`a}}1 {ả}{{\'a}}1 {ã}{{\~a}}1 {ạ}{{\d{a}}}1 % Hỗ trợ tiếng Việt trong comment code nếu cần
 }
 
-% Cấu hình chung cho listings
 \lstset{style=mystyle}
 
 % --- BẮT ĐẦU TÀI LIỆU ---
@@ -91,9 +104,10 @@
     {\Huge \textbf{BÁO CÁO}}\par
     \vspace{0.5cm}
     {\Large HỌC PHẦN: AN TOÀN VÀ BẢO MẬT DỮ LIỆU TRONG HỆ THỐNG THÔNG TIN}\par
-    
+
     \vspace{1cm}
-    {\Huge \textbf{PHẦN MỀM QUẢN LÝ MẬT KHẨU AN TOÀN}}\par
+
+    {\Huge \textbf{XÂY DỰNG ỨNG DỤNG QUẢN LÝ MẬT KHẨU WEB AURACRYPT VỚI KIẾN TRÚC ZERO-KNOWLEDGE}}\par
 
     \vfill
 
@@ -115,38 +129,22 @@
     {\large Thành phố Hồ Chí Minh, tháng 11 năm 2025\par}
 \end{titlepage}
 
-% --- ĐÁNH SỐ TRANG RÔ-MA CHO CÁC TRANG MỞ ĐẦU ---
+% --- CÁC TRANG ĐẦU ---
 \pagenumbering{roman}
-\input{loi_cam_on} % Lời cảm ơn (tùy chọn)
-\input{tom_tat}     % Tóm tắt (Abstract)
-% \input{muc_luc}     % Mục lục (nếu muốn một file riêng)
-\tableofcontents % Nếu bạn muốn nó tự động tạo, hãy để đây.
-
-\listoffigures % Danh sách hình ảnh (nếu có nhiều hình)
-\listoftables  % Danh sách bảng biểu (nếu có nhiều bảng)
+\input{loi_cam_on}
+\input{tom_tat}
+\tableofcontents
+\listoffigures
 \newpage
 
-% --- ĐÁNH SỐ TRANG SỐ CHO NỘI DUNG CHÍNH ---
+% --- NỘI DUNG CHÍNH ---
 \pagenumbering{arabic}
-\setcounter{page}{1} % Bắt đầu lại số trang từ 1
+\setcounter{page}{1}
 
-% --- NẠP CÁC CHƯƠNG TỪ CÁC FILE RIÊNG ---
 \input{chuong1_gioithieu}
 \input{chuong2_coboslythuyet}
 \input{chuong3_phantich_thietke}
 \input{chuong4_trienkhai_thu_nghiem}
 \input{chuong5_ketluan_huongphattrien}
-
-% --- PHỤ LỤC (Nếu có) ---
-% \appendix % Bắt đầu phần phụ lục
-% \input{phuluc_a}
-% \input{phuluc_b}
-
-% --- TÀI LIỆU THAM KHẢO ---
-% \nocite{*} % Để hiển thị tất cả các mục trong references.bib ngay cả khi không được trích dẫn
-% \printbibliography % Nếu dùng biblatex
-% Nếu dùng bibtex thủ công:
-% \bibliographystyle{plain}
-% \bibliography{references}
 
 \end{document}

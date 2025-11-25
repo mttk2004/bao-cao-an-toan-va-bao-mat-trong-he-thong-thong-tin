@@ -1,103 +1,234 @@
 \chapter{PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG}
 
+Chương này đi sâu vào việc phân tích các yêu cầu chức năng và phi chức năng của hệ thống AuraCrypt, đồng thời trình bày chi tiết thiết kế kiến trúc, cơ sở dữ liệu và các quy trình xử lý nghiệp vụ quan trọng.
+
 \section{Phân tích yêu cầu}
+
 \subsection{Yêu cầu chức năng}
+Hệ thống được thiết kế để đáp ứng các nhu cầu quản lý mật khẩu toàn diện của người dùng cá nhân, bao gồm các nhóm chức năng chính sau:
+
 \begin{itemize}
-    \item \textbf{Quản lý mật khẩu:} Thêm, sửa, xóa, xem các mục nhập mật khẩu.
-    \item \textbf{Mã hóa/Giải mã:} Bảo vệ dữ liệu mật khẩu bằng mã hóa AES-256-GCM.
-    \item \textbf{Tạo mật khẩu mạnh:} Tự động tạo mật khẩu ngẫu nhiên theo các tiêu chí (độ dài, ký tự đặc biệt, số...).
-    \item \textbf{Quản lý danh mục:} Phân loại mật khẩu theo các danh mục (ví dụ: Công việc, Cá nhân, Ngân hàng).
-    \item \textbf{Tìm kiếm:} Tìm kiếm nhanh các mục nhập mật khẩu.
-    \item \textbf{Sao lưu và phục hồi:} Tự động sao lưu dữ liệu và cung cấp khả năng phục hồi từ các bản sao lưu.
-    \item \textbf{Nhập/Xuất dữ liệu:} Hỗ trợ nhập/xuất dữ liệu từ/ra file JSON hoặc CSV.
-    \item \textbf{Tự động khóa:} Tự động khóa ứng dụng sau một khoảng thời gian không hoạt động.
-    \item \textbf{Tạo shortcut (Windows):} Tự động tạo shortcut trên desktop khi chạy lần đầu.
+    \item \textbf{Quản lý tài khoản và Xác thực:}
+    \begin{itemize}
+        \item Đăng ký và đăng nhập tài khoản qua Email (sử dụng Supabase Auth).
+        \item Thiết lập và xác thực Mật khẩu chủ (Master Password) để mở khóa Két dữ liệu (Vault).
+        \item Cơ chế khôi phục khẩn cấp (Reset Vault) khi quên mật khẩu chủ (chấp nhận mất dữ liệu để bảo vệ quyền riêng tư).
+    \end{itemize}
+
+    \item \textbf{Quản lý dữ liệu mật khẩu (CRUD):}
+    \begin{itemize}
+        \item Thêm mới, xem, chỉnh sửa và xóa các mục nhập (Entries).
+        \item Hỗ trợ đa dạng loại dữ liệu: Tài khoản đăng nhập (Login), Thẻ ngân hàng (Credit Card), Thông tin danh tính (Identity).
+        \item Tự động sao chép mật khẩu và tên đăng nhập vào clipboard.
+    \end{itemize}
+
+    \item \textbf{Tổ chức và Tìm kiếm:}
+    \begin{itemize}
+        \item Phân loại dữ liệu theo Danh mục (Categories) như: Công việc, Xã hội, Tài chính...
+        \item Tìm kiếm thời gian thực theo tên dịch vụ hoặc tên đăng nhập.
+    \end{itemize}
+
+    \item \textbf{Công cụ bảo mật nâng cao:}
+    \begin{itemize}
+        \item \textbf{Password Generator:} Tạo mật khẩu ngẫu nhiên mạnh với độ dài và ký tự tùy chỉnh.
+        \item \textbf{Health Check:} Phân tích độ mạnh của mật khẩu và kiểm tra lộ lọt dữ liệu.
+        \item \textbf{Secure Sharing:} Chia sẻ mật khẩu an toàn qua liên kết tạm thời (Magic Link) có cơ chế tự hủy.
+        \item \textbf{Auto-lock:} Tự động khóa két sau một khoảng thời gian không hoạt động.
+    \end{itemize}
+
+    \item \textbf{Tiện ích mở rộng:}
+    \begin{itemize}
+        \item Nhập/Xuất dữ liệu (Import/Export) định dạng CSV.
+        \item Hỗ trợ giao diện Sáng/Tối (Light/Dark Theme) và Đa ngôn ngữ (Anh/Việt).
+    \end{itemize}
 \end{itemize}
 
 \subsection{Yêu cầu phi chức năng}
 \begin{itemize}
-    \item \textbf{Bảo mật:} Dữ liệu phải được bảo vệ chống lại truy cập trái phép và các cuộc tấn công.
-    \item \textbf{Hiệu năng:} Ứng dụng phải hoạt động mượt mà, thời gian mã hóa/giải mã và tìm kiếm nhanh chóng.
-    \item \textbf{Độ tin cậy:} Dữ liệu không được mất mát hoặc hỏng hóc. Hệ thống sao lưu phải hoạt động ổn định.
-    \item \textbf{Khả năng sử dụng:} Giao diện phải trực quan, dễ hiểu và dễ thao tác.
-    \item \textbf{Khả năng mở rộng:} Kiến trúc hệ thống nên cho phép dễ dàng thêm các tính năng mới.
+    \item \textbf{Bảo mật (Security):} Đây là yêu cầu quan trọng nhất. Hệ thống phải tuân thủ kiến trúc Zero-Knowledge. Dữ liệu nhạy cảm (mật khẩu, ghi chú) phải luôn được mã hóa trước khi rời khỏi trình duyệt.
+    \item \textbf{Hiệu năng (Performance):} Quá trình mã hóa/giải mã phải diễn ra tức thì, không gây độ trễ đáng kể cho người dùng. Giao diện phải phản hồi nhanh (Responsive).
+    \item \textbf{Tính sẵn sàng (Availability):} Dữ liệu phải được đồng bộ hóa và truy cập được từ mọi nơi thông qua trình duyệt web.
 \end{itemize}
 
-\section{Thiết kế kiến trúc hệ thống}
-AuraCrypt được thiết kế theo kiến trúc phân lớp, tách biệt rõ ràng các thành phần để dễ bảo trì và mở rộng.
+\section{Kiến trúc hệ thống}
 
+\subsection{Mô hình tổng quan}
+AuraCrypt Web hoạt động theo mô hình Client-Server nhưng với sự phân chia trách nhiệm đặc biệt về bảo mật.
+
+% // TODO: Chèn hình ảnh sơ đồ kiến trúc tổng quan (Client: React App <--> Internet <--> Server: Supabase)
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\textwidth]{images/architecture_diagram.png}
-    \caption{Kiến trúc tổng quan của AuraCrypt}
-    \label{fig:architecture_diagram}
+    % \includegraphics[width=0.8\textwidth]{images/kientruc_tongquan.png}
+    \caption{Mô hình kiến trúc hệ thống AuraCrypt}
+    \label{fig:architecture}
 \end{figure}
-\textbf{Các lớp chính:}
+
 \begin{itemize}
-    \item \textbf{Presentation Layer (Lớp giao diện):} Xử lý các tương tác với người dùng thông qua Flet UI. Bao gồm các view (login, main vault, settings).
-    \item \textbf{Application Layer (Lớp ứng dụng):} Chứa logic điều khiển chính của ứng dụng, tương tác với các lớp dưới để thực hiện các yêu cầu của người dùng.
-    \item \textbf{Service Layer (Lớp dịch vụ):} Cung cấp các dịch vụ cốt lõi như quản lý vault, tạo mật khẩu, quản lý danh mục.
-    \item \textbf{Infrastructure Layer (Lớp hạ tầng):} Bao gồm các module xử lý mã hóa, đọc/ghi file, sao lưu và các tương tác với hệ điều hành (ví dụ: tạo shortcut).
+    \item \textbf{Client (Trình duyệt):} Đóng vai trò là "Vùng an toàn" (Trusted Zone). Tại đây diễn ra mọi hoạt động xử lý dữ liệu nhạy cảm:
+    \begin{itemize}
+        \item Nhập liệu từ người dùng.
+        \item Dẫn xuất khóa (Key Derivation) từ Mật khẩu chủ.
+        \item Mã hóa và Giải mã dữ liệu bằng Web Crypto API.
+    \end{itemize}
+    \item \textbf{Server (Supabase):} Đóng vai trò là "Kho chứa mù" (Untrusted Storage). Server chỉ thực hiện:
+    \begin{itemize}
+        \item Xác thực người dùng (cấp Session token).
+        \item Lưu trữ và truy vấn các chuỗi dữ liệu đã mã hóa (Ciphertext).
+        \item Thực thi các quy tắc phân quyền (Row Level Security).
+    \end{itemize}
 \end{itemize}
 
-\section{Thiết kế cơ sở dữ liệu (Cấu trúc Vault)}
-Dữ liệu mật khẩu được lưu trữ dưới dạng một file JSON đã mã hóa.
-\begin{lstlisting}[caption=Cấu trúc dữ liệu vault mã hóa]
-{
-    "salt": "base64_encoded_salt",
-    "nonce": "base64_encoded_nonce",
-    "ciphertext": "base64_encoded_encrypted_data"
-}
-\end{lstlisting}
-Trong đó, `ciphertext` chứa một đối tượng JSON đã mã hóa với cấu trúc sau:
-\begin{lstlisting}[caption=Cấu trúc dữ liệu nội dung vault (chưa mã hóa)]
-{
-    "master_key_fingerprint": "hash_of_derived_key",
-    "entries": [
-        {
-            "id": "uuid",
-            "service": "Ten dich vu",
-            "username": "Ten nguoi dung",
-            "password": "Mat khau",
-            "url": "URL lien quan",
-            "category": "Danh muc",
-            "notes": "Ghi chu",
-            "created_at": "timestamp",
-            "updated_at": "timestamp"
-        }
-    ],
-    "categories": [
-        "Danh muc 1",
-        "Danh muc 2"
-    ],
-    "settings": {
-        "auto_lock_timeout": 900,
-        "clipboard_clear_delay": 15
-    }
-}
-\end{lstlisting}
-\subsection{Quản lý dữ liệu sao lưu}
-Các bản sao lưu được lưu trong thư mục \texttt{backups} dưới dạng \texttt{vault\_YYYYMMDD\_HHMMSS.bak}.
+\subsection{Ranh giới tin cậy (Trust Boundary)}
+Điểm khác biệt cốt lõi của AuraCrypt là ranh giới tin cậy nằm ngay tại thiết bị người dùng. Mật khẩu chủ (Master Password) và Khóa mã hóa (Encryption Key) không bao giờ vượt qua ranh giới này để đi vào môi trường mạng.
 
-\section{Thiết kế giao diện người dùng (UI/UX)}
-Giao diện người dùng được thiết kế dựa trên nguyên tắc tối giản, hiện đại và dễ sử dụng.
+% // TODO: Chèn hình ảnh minh họa Trust Boundary (User -> Browser [Encryption] -> Network -> Cloud DB)
+
+\section{Thiết kế cơ sở dữ liệu}
+
+Cơ sở dữ liệu được thiết kế trên nền tảng PostgreSQL của Supabase. Do đặc thù bảo mật, thiết kế này phân tách rõ ràng giữa dữ liệu định danh (Metadata - có thể tìm kiếm) và dữ liệu bí mật (Secret Data - được mã hóa).
+
+% // TODO: Chèn hình ảnh ER Diagram (Sơ đồ thực thể liên kết) của 3 bảng bên dưới
+
+\subsection{Bảng \texttt{entries} (Lưu trữ mật khẩu)}
+Đây là bảng chính lưu trữ thông tin các tài khoản của người dùng.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{1.5cm}|p{6.5cm}|}
+    \hline
+    \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Bắt buộc} & \textbf{Mô tả} \\
+    \hline
+    \texttt{id} & UUID & Có & Khóa chính, tự động sinh. \\
+    \hline
+    \texttt{user\_id} & UUID & Có & Khóa ngoại tham chiếu đến bảng \texttt{auth.users}. \\
+    \hline
+    \texttt{service\_name} & Text & Có & Tên dịch vụ (VD: Facebook, Google). Lưu dạng rõ để tìm kiếm. \\
+    \hline
+    \texttt{username} & Text & Không & Tên đăng nhập. Lưu dạng rõ để tìm kiếm. \\
+    \hline
+    \texttt{category} & Text & Không & Tên danh mục. \\
+    \hline
+    \texttt{encrypted\_password} & Text & Có & \textbf{Dữ liệu mật.} Chứa chuỗi Base64 của mật khẩu đã mã hóa. \\
+    \hline
+    \texttt{encrypted\_notes} & Text & Không & \textbf{Dữ liệu mật.} Chứa chuỗi Base64 của ghi chú kèm theo IV riêng (Format: \texttt{IV:Ciphertext}). \\
+    \hline
+    \texttt{iv} & Text & Có & Vector khởi tạo (Nonce) dùng cho việc giải mã trường password. \\
+    \hline
+    \texttt{created\_at} & Timestamptz & Có & Thời gian tạo. \\
+    \hline
+\end{longtable}
+
+\subsection{Bảng \texttt{categories} (Quản lý danh mục)}
+Lưu trữ danh sách các danh mục tùy chỉnh của người dùng.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{1.5cm}|p{6.5cm}|}
+    \hline
+    \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Bắt buộc} & \textbf{Mô tả} \\
+    \hline
+    \texttt{id} & UUID & Có & Khóa chính. \\
+    \hline
+    \texttt{user\_id} & UUID & Có & Chủ sở hữu danh mục. \\
+    \hline
+    \texttt{name} & Text & Có & Tên danh mục (VD: Work, Social). \\
+    \hline
+\end{longtable}
+
+\subsection{Bảng \texttt{shared\_entries} (Chia sẻ bảo mật)}
+Lưu trữ các gói dữ liệu mã hóa tạm thời phục vụ tính năng chia sẻ Magic Link.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{1.5cm}|p{6.5cm}|}
+    \hline
+    \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Bắt buộc} & \textbf{Mô tả} \\
+    \hline
+    \texttt{id} & UUID & Có & Khóa chính, dùng làm ID trong URL chia sẻ. \\
+    \hline
+    \texttt{encrypted\_data} & Text & Có & Dữ liệu JSON chứa thông tin chia sẻ đã được mã hóa bằng khóa tạm thời (Transient Key). \\
+    \hline
+    \texttt{iv} & Text & Có & Vector khởi tạo cho gói tin chia sẻ. \\
+    \hline
+    \texttt{views\_remaining} & Integer & Có & Số lượt xem còn lại (thường là 1 để tự hủy). \\
+    \hline
+    \texttt{expires\_at} & Timestamptz & Có & Thời gian hết hạn của liên kết. \\
+    \hline
+\end{longtable}
+
+\section{Thiết kế luồng xử lý (Sequence Diagrams)}
+
+\subsection{Quy trình Mở khóa Két (Vault Unlock)}
+Quy trình này đảm bảo rằng chỉ khi người dùng nhập đúng Mật khẩu chủ, dữ liệu mới có thể được hiển thị.
+
+\begin{enumerate}
+    \item Người dùng nhập Mật khẩu chủ (Master Password) vào form mở khóa.
+    \item Ứng dụng sử dụng \textbf{PBKDF2} để dẫn xuất ra Khóa mã hóa (Encryption Key).
+    \item Ứng dụng tải về \textbf{một bản ghi mới nhất} từ bảng \texttt{entries} trên Supabase.
+    \item Ứng dụng thử dùng Khóa vừa tạo để giải mã trường \texttt{encrypted\_password} của bản ghi đó bằng thuật toán \textbf{AES-GCM}.
+    \item \textbf{Nếu giải mã thành công:} Khóa được xác nhận là đúng và được lưu vào bộ nhớ phiên (Session Storage). Người dùng được chuyển vào Dashboard.
+    \item \textbf{Nếu giải mã thất bại (Exception):} Khóa sai. Ứng dụng báo lỗi "Sai mật khẩu" và không cho phép truy cập.
+\end{enumerate}
+
+% // TODO: Chèn hình ảnh Sequence Diagram cho quy trình Unlock Vault
+
+\subsection{Quy trình Thêm mới Mật khẩu (Add Entry)}
+\begin{enumerate}
+    \item Người dùng nhập thông tin (Tên dịch vụ, Username, Password, Note) vào form.
+    \item Ứng dụng sinh ngẫu nhiên một \textbf{IV (Initialization Vector)} 12 bytes.
+    \item Sử dụng Khóa mã hóa trong bộ nhớ để mã hóa trường Password và Note bằng \textbf{AES-GCM}.
+    \item Dữ liệu sau khi mã hóa (Ciphertext) được chuyển sang định dạng Base64.
+    \item Ứng dụng đóng gói Metadata (Service name, Username - dạng rõ) và Ciphertext gửi lên API của Supabase.
+    \item Supabase lưu trữ bản ghi và trả về xác nhận thành công.
+\end{enumerate}
+
+% // TODO: Chèn hình ảnh Sequence Diagram cho quy trình Add Entry
+
+\subsection{Quy trình Chia sẻ An toàn (Secure Sharing)}
+Đây là tính năng đặc biệt giúp chia sẻ mật khẩu mà không lộ khóa chủ.
+
+\begin{enumerate}
+    \item Client sinh ra một \textbf{Khóa tạm thời (Transient Key)} ngẫu nhiên.
+    \item Dữ liệu cần chia sẻ được mã hóa bằng Khóa tạm thời này.
+    \item Gói dữ liệu mã hóa (Ciphertext) được gửi lên Server (\texttt{shared\_entries}).
+    \item Khóa tạm thời được chuyển thành chuỗi Base64 và ghép vào URL dưới dạng \textbf{Hash Fragment} (phần sau dấu \#).
+    \item \textbf{Kết quả:} URL có dạng \texttt{domain.com/\#share?id=...\&key=...}. Vì phần Hash không bao giờ được gửi lên Server trong HTTP Request, Server không bao giờ biết được khóa giải mã.
+\end{enumerate}
+
+\section{Thiết kế giao diện người dùng (UI Design)}
+
+Giao diện được thiết kế theo phong cách hiện đại (Modern UI), tối giản và tập trung vào trải nghiệm người dùng, hỗ trợ chế độ tối (Dark Mode) để giảm mỏi mắt.
+
+\subsection{Màn hình Đăng nhập & Mở khóa (Auth & Vault Unlock)}
+Giao diện đầu tiên người dùng tiếp cận. Được chia làm hai trạng thái:
 \begin{itemize}
-    \item \textbf{Màn hình Đăng nhập/Thiết lập:} Đơn giản, rõ ràng, hướng dẫn người dùng thiết lập mật khẩu chủ lần đầu.
-    \item \textbf{Màn hình chính (Vault):} Hiển thị danh sách mật khẩu, thanh tìm kiếm, bộ lọc danh mục và các nút chức năng (thêm, sửa, xóa).
-    \item \textbf{Form thêm/sửa mật khẩu:} Các trường nhập liệu rõ ràng, tích hợp nút tạo mật khẩu mạnh.
+    \item \textbf{Xác thực tài khoản:} Form đăng nhập/đăng ký với Email.
+    \item \textbf{Mở khóa Két:} Form nhập Mật khẩu chủ với biểu tượng ổ khóa lớn, tạo cảm giác an toàn.
 \end{itemize}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{images/mock_login_screen.png}
-    \caption{Thiết kế giao diện màn hình Đăng nhập}
-    \label{fig:login_screen}
-\end{figure}
+% // TODO: Chèn ảnh chụp màn hình giao diện Login/Unlock
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{images/mock_main_screen.png}
-    \caption{Thiết kế giao diện màn hình chính}
-    \label{fig:main_screen}
-\end{figure}
-\newpage
+\subsection{Màn hình Chính (Dashboard)}
+Trung tâm điều khiển của ứng dụng, bao gồm:
+\begin{itemize}
+    \item \textbf{Sidebar:} Điều hướng danh mục và các công cụ tiện ích.
+    \item \textbf{Thanh tìm kiếm:} Tìm kiếm thời gian thực.
+    \item \textbf{Danh sách thẻ (Grid/List view):} Hiển thị các tài khoản dưới dạng thẻ trực quan với logo thương hiệu (Favicon) tự động lấy từ URL.
+\end{itemize}
+
+% // TODO: Chèn ảnh chụp màn hình Dashboard chính
+
+\subsection{Màn hình Thêm/Sửa (Entry Modal)}
+Modal popup cho phép nhập liệu chi tiết.
+\begin{itemize}
+    \item Tự động gợi ý danh mục và icon dựa trên tên dịch vụ.
+    \item Tích hợp công cụ sinh mật khẩu mạnh ngay trong ô nhập liệu.
+    \item Hiển thị cảnh báo nếu người dùng nhập một mật khẩu yếu.
+\end{itemize}
+
+% // TODO: Chèn ảnh chụp màn hình Modal thêm mới
+
+\subsection{Tiện ích mở rộng (Browser Extension)}
+Phiên bản thu nhỏ của ứng dụng chạy trên góc trình duyệt, phục vụ tính năng tự động điền (Auto-fill).
+\begin{itemize}
+    \item Tự động phát hiện tên miền trang web đang mở.
+    \item Hiển thị các tài khoản tương ứng để điền nhanh chóng.
+\end{itemize}
+
+% // TODO: Chèn ảnh chụp giao diện Extension Popup
+
+\end{document}

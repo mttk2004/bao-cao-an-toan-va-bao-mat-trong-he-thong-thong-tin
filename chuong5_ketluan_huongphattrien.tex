@@ -1,37 +1,49 @@
 \chapter{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}
 
 \section{Kết luận}
-Đồ án "Phần mềm quản lý mật khẩu an toàn AuraCrypt" đã hoàn thành các mục tiêu đề ra. Tôi đã thành công trong việc thiết kế và triển khai một ứng dụng quản lý mật khẩu an toàn, dễ sử dụng, tích hợp các tính năng bảo mật và tiện ích cần thiết. AuraCrypt cung cấp một giải pháp đáng tin cậy để người dùng bảo vệ thông tin đăng nhập quan trọng của mình.
 
-Những điểm nổi bật của đồ án bao gồm:
+Đồ án "Xây dựng ứng dụng quản lý mật khẩu Web AuraCrypt với kiến trúc Zero-Knowledge" đã hoàn thành các mục tiêu đề ra ban đầu, mang lại một giải pháp lưu trữ mật khẩu an toàn, hiện đại và tôn trọng tuyệt đối quyền riêng tư của người dùng.
+
+\subsection{Các kết quả đạt được}
 \begin{itemize}
-    \item Hệ thống mã hóa mạnh mẽ với AES-256-GCM và PBKDF2.
-    \item Giao diện người dùng trực quan, thân thiện.
-    \item Các tính năng tiện ích như tạo mật khẩu mạnh, quản lý danh mục, sao lưu tự động.
-    \item Khả năng đóng gói thành ứng dụng độc lập trên Windows, tự động tạo shortcut.
+    \item \textbf{Kiến trúc bảo mật vững chắc:} Đã hiện thực hóa thành công mô hình Zero-Knowledge trên nền tảng Web. Hệ thống đảm bảo rằng dữ liệu nhạy cảm luôn được mã hóa bằng thuật toán AES-256-GCM ngay tại trình duyệt trước khi được đồng bộ hóa lên máy chủ. Mật khẩu chủ và khóa mã hóa không bao giờ rời khỏi thiết bị người dùng.
+    \item \textbf{Ứng dụng công nghệ tiên tiến:} Việc sử dụng Web Crypto API thay vì các thư viện bên thứ ba đã giúp tối ưu hóa hiệu năng và nâng cao độ tin cậy của các phép toán mật mã. Kết hợp với React 19 và Supabase, ứng dụng đạt được tốc độ phản hồi nhanh và trải nghiệm người dùng mượt mà.
+    \item \textbf{Tính năng phong phú và thực tiễn:} Bên cạnh các chức năng CRUD cơ bản, đồ án đã tích hợp thành công các tính năng cao cấp thường thấy ở các sản phẩm thương mại như: Kiểm tra độ mạnh mật khẩu, Phát hiện rò rỉ dữ liệu (k-Anonymity) và Chia sẻ bảo mật qua Magic Link.
+    \item \textbf{Giá trị học thuật:} Đồ án là minh chứng thực tế cho việc áp dụng các lý thuyết mật mã học (Hàm băm, Mã hóa đối xứng, Dẫn xuất khóa) vào giải quyết một bài toán an ninh mạng cụ thể trong đời sống.
 \end{itemize}
-Trong quá trình thực hiện, tôi đã học hỏi được nhiều kiến thức quý báu về mật mã học, kiến trúc phần mềm và quy trình phát triển ứng dụng.
 
 \section{Hạn chế}
-Mặc dù đã đạt được nhiều thành công, đồ án vẫn còn một số hạn chế:
+
+Mặc dù đã đạt được những kết quả tích cực, hệ thống vẫn tồn tại một số hạn chế do giới hạn về thời gian nghiên cứu và đặc thù của nền tảng Web:
+
 \begin{itemize}
-    \item \textbf{Chưa hỗ trợ đa nền tảng hoàn chỉnh:} Hiện tại chỉ tập trung tối ưu cho Windows, chưa thử nghiệm đầy đủ trên macOS hoặc Linux với các tính năng đặc thù (ví dụ: tạo shortcut).
-    \item \textbf{Chưa tích hợp tự động điền/đăng nhập:} Người dùng vẫn phải sao chép/dán mật khẩu thủ công.
-    \item \textbf{Chưa có tính năng đồng bộ hóa:} Dữ liệu chỉ được lưu trữ cục bộ, chưa có cơ chế đồng bộ hóa an toàn giữa các thiết bị.
-    \item \textbf{Giao diện cơ bản:} Mặc dù thân thiện, giao diện vẫn có thể được cải thiện để hiện đại và linh hoạt hơn.
-\item \textbf{Xử lý ngoại lệ:} Một số trường hợp ngoại lệ hiếm gặp có thể chưa được xử lý tối ưu.
+    \item \textbf{Rủi ro môi trường trình duyệt:} So với ứng dụng Desktop (Native App), ứng dụng Web dễ bị tổn thương hơn trước các cuộc tấn công XSS (Cross-Site Scripting). Nếu máy tính người dùng bị nhiễm mã độc hoặc trình duyệt bị cài tiện ích mở rộng độc hại, khóa mã hóa trong bộ nhớ có thể bị đánh cắp.
+    \item \textbf{Cơ chế khôi phục tài khoản:} Do tuân thủ nghiêm ngặt nguyên tắc Zero-Knowledge, hiện tại hệ thống không có cách nào khôi phục dữ liệu nếu người dùng quên Mật khẩu chủ. Đây là một sự đánh đổi giữa bảo mật và tính tiện dụng, nhưng có thể gây khó khăn cho người dùng phổ thông.
+    \item \textbf{Phụ thuộc vào kết nối mạng:} Mặc dù có thể hoạt động Offline một phần nhờ bộ nhớ đệm (Cache), ứng dụng vẫn cần kết nối Internet để thực hiện các tác vụ quan trọng như đăng nhập lần đầu, đồng bộ dữ liệu và kiểm tra lộ lọt mật khẩu.
 \end{itemize}
 
-\section{Hướng phát triển trong tương lai}
-Để cải thiện và mở rộng AuraCrypt, tôi đề xuất các hướng phát triển sau:
+\section{Hướng phát triển}
+
+Để hoàn thiện sản phẩm và nâng cao khả năng ứng dụng trong thực tế, các hướng phát triển sau đây được đề xuất:
+
+\subsection{Tích hợp xác thực sinh trắc học (WebAuthn/Passkeys)}
+Thay thế hoặc bổ sung cho Mật khẩu chủ bằng công nghệ WebAuthn. Cho phép người dùng mở khóa két bằng vân tay hoặc FaceID ngay trên trình duyệt, vừa tăng tính tiện dụng vừa giảm nguy cơ bị Keylogger ghi lại mật khẩu.
+
+\subsection{Cơ chế chia sẻ khóa công khai (Public Key Cryptography)}
+Hiện tại tính năng chia sẻ đang sử dụng khóa đối xứng tạm thời. Trong tương lai, có thể triển khai hệ thống mã hóa bất đối xứng (RSA hoặc ECC). Mỗi người dùng sẽ có một cặp khóa Public/Private. Điều này cho phép chia sẻ mật khẩu trực tiếp giữa các tài khoản AuraCrypt đã xác thực mà không cần gửi link ra ngoài.
+
+\subsection{Phát triển Tiện ích mở rộng hoàn chỉnh (Browser Extension)}
+Mở rộng module Extension hiện tại thành một sản phẩm hoàn chỉnh trên Chrome Store, có khả năng:
 \begin{itemize}
-    \item \textbf{Tích hợp tính năng tự động điền (Autofill):} Phát triển tiện ích mở rộng trình duyệt hoặc tính năng tự động điền vào các trường đăng nhập trên website.
-    \item \textbf{Đồng bộ hóa dữ liệu an toàn:} Nghiên cứu và triển khai cơ chế đồng bộ hóa dữ liệu mã hóa giữa các thiết bị thông qua các dịch vụ đám mây (ví dụ: Google Drive, Dropbox) với bảo mật từ đầu đến cuối (end-to-end encryption).
-    \item \textbf{Hỗ trợ đa nền tảng tốt hơn:} Tối ưu hóa cho macOS và Linux, bao gồm cả các tính năng đặc thù của từng hệ điều hành.
-    \item \textbf{Xác thực đa yếu tố (MFA):} Tích hợp các phương pháp xác thực thứ cấp (ví dụ: sinh trắc học, TOTP) để tăng cường bảo mật.
-    \item \textbf{Cải thiện UI/UX:} Nâng cấp giao diện người dùng, bổ sung thêm các tùy chỉnh và chủ đề (themes) để cá nhân hóa trải nghiệm.
-    \item \textbf{Kiểm tra bảo mật chuyên sâu:} Thực hiện các cuộc kiểm tra thâm nhập (penetration testing) và đánh giá lỗ hổng bảo mật chuyên nghiệp.
+    \item Tự động phát hiện trường đăng nhập trên mọi website.
+    \item Đề xuất lưu mật khẩu mới khi người dùng đăng ký tài khoản.
+    \item Đồng bộ hóa trạng thái mở khóa giữa Tab ứng dụng và Extension.
 \end{itemize}
 
-Hy vọng đồ án này sẽ là nền tảng vững chắc cho các nghiên cứu và phát triển tiếp theo trong lĩnh vực quản lý mật khẩu và bảo mật thông tin.
+\subsection{Cơ chế "Emergency Kit"}
+Cung cấp cho người dùng một file PDF chứa "Khóa khôi phục" (Recovery Key) khi họ tạo tài khoản. Khóa này được mã hóa đặc biệt và có thể dùng để reset mật khẩu chủ trong trường hợp khẩn cấp mà không làm mất dữ liệu.
+
+\vspace{1cm}
+Lời cuối, đồ án này không chỉ là một sản phẩm phần mềm mà còn là quá trình nghiên cứu nghiêm túc về bảo mật ứng dụng Web. Tôi hy vọng AuraCrypt sẽ là tiền đề cho các nghiên cứu sâu hơn về bảo mật dữ liệu cá nhân trong tương lai.
+
 \newpage

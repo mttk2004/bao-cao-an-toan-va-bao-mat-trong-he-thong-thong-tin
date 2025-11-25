@@ -1,11 +1,11 @@
 \chapter*{TÓM TẮT}
-\addcontentsline{toc}{chapter}{TÓM TẮT} % Thêm vào mục lục thủ công
+\addcontentsline{toc}{chapter}{TÓM TẮT}
 
-Đồ án này tập trung vào việc nghiên cứu, thiết kế và triển khai một phần mềm quản lý mật khẩu an toàn mang tên AuraCrypt. Với sự gia tăng của các dịch vụ trực tuyến, việc quản lý và bảo mật một lượng lớn mật khẩu đã trở thành thách thức lớn đối với người dùng. AuraCrypt được phát triển nhằm giải quyết vấn đề này, cung cấp một giải pháp hiệu quả để lưu trữ, mã hóa và quản lý thông tin đăng nhập một cách an toàn trên nhiều nền tảng.
+Đồ án này trình bày quá trình nghiên cứu và phát triển **AuraCrypt Web** – một ứng dụng quản lý mật khẩu trực tuyến dựa trên kiến trúc bảo mật **Zero-Knowledge (Không kiến thức)**. Mục tiêu chính của đồ án là giải quyết bài toán niềm tin giữa người dùng và nhà cung cấp dịch vụ lưu trữ bằng cách áp dụng cơ chế mã hóa phía máy khách (Client-side Encryption).
 
-Phần mềm sử dụng thuật toán mã hóa đối xứng tiên tiến AES-256-GCM để bảo vệ toàn bộ dữ liệu người dùng, kết hợp với PBKDF2 để tăng cường độ an toàn cho mật khẩu chủ. Ngoài ra, AuraCrypt tích hợp các tính năng tiện ích như tạo mật khẩu mạnh, quản lý danh mục thông minh, sao lưu tự động và khả năng xuất/nhập dữ liệu. Giao diện người dùng được thiết kế trực quan, thân thiện, giúp người dùng dễ dàng thao tác.
+Ứng dụng được xây dựng trên nền tảng công nghệ web hiện đại với **React** và **TypeScript**, sử dụng hệ quản trị cơ sở dữ liệu **Supabase**. Điểm nổi bật của AuraCrypt là việc sử dụng **Web Crypto API** để thực hiện các thuật toán mã hóa mạnh mẽ (**AES-256-GCM**, **PBKDF2**) ngay trên trình duyệt, đảm bảo dữ liệu rời khỏi thiết bị người dùng luôn ở trạng thái đã được mã hóa.
 
-Kết quả của đồ án là một ứng dụng quản lý mật khẩu độc lập trên Windows, đảm bảo tính bảo mật cao và mang lại trải nghiệm người dùng liền mạch, góp phần nâng cao ý thức và hiệu quả bảo mật thông tin cá nhân.
+Ngoài các chức năng lưu trữ cơ bản, đồ án còn triển khai các tính năng bảo mật nâng cao như chia sẻ dữ liệu an toàn qua liên kết tạm thời (Magic Links) và kiểm tra lộ lọt mật khẩu mà không làm ảnh hưởng đến tính riêng tư của người dùng. Kết quả đạt được là một sản phẩm phần mềm hoàn chỉnh, minh họa thực tế cho việc áp dụng các nguyên lý bảo mật tiên tiến vào phát triển ứng dụng web.
 
 \vspace{1cm}
 \begin{flushright}

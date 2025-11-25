@@ -1,26 +1,46 @@
 \chapter{GIỚI THIỆU}
+
 \section{Đặt vấn đề}
-Trong thời đại số hóa hiện nay, mỗi cá nhân và tổ chức đều phải quản lý một lượng lớn tài khoản trực tuyến với các mật khẩu khác nhau. Việc sử dụng mật khẩu yếu, trùng lặp hoặc ghi nhớ chúng một cách thủ công không chỉ gây bất tiện mà còn tiềm ẩn nguy cơ bảo mật nghiêm trọng. Các cuộc tấn công mạng, rò rỉ dữ liệu ngày càng phức tạp đã đặt ra yêu cầu cấp thiết về một giải pháp quản lý mật khẩu an toàn và hiệu quả.
+Trong kỷ nguyên số hóa, trung bình mỗi người dùng internet sở hữu hàng chục đến hàng trăm tài khoản trực tuyến. Việc quản lý số lượng lớn mật khẩu này đặt ra một thách thức lớn về an toàn thông tin. Người dùng thường có xu hướng tái sử dụng mật khẩu hoặc đặt mật khẩu đơn giản để dễ nhớ, dẫn đến nguy cơ cao bị tấn công qua các kỹ thuật như Credential Stuffing hay Brute-force.
+
+Các giải pháp quản lý mật khẩu truyền thống (Password Managers) đã ra đời để giải quyết vấn đề này. Tuy nhiên, đa số các giải pháp trên nền tảng Web hiện nay hoạt động theo mô hình tin cậy máy chủ (Server-side trust), nơi nhà cung cấp dịch vụ nắm giữ chìa khóa để khôi phục hoặc truy cập dữ liệu người dùng. Điều này tạo ra một điểm yếu chí mạng: nếu máy chủ bị tấn công, toàn bộ kho dữ liệu mật khẩu của hàng triệu người dùng sẽ bị lộ dưới dạng văn bản rõ (plaintext) hoặc dễ dàng bị giải mã. Các vụ rò rỉ dữ liệu lớn từ các dịch vụ quản lý mật khẩu nổi tiếng trong những năm gần đây là minh chứng rõ ràng nhất cho rủi ro này.
+
+Do đó, nhu cầu cấp thiết đặt ra là xây dựng một giải pháp quản lý mật khẩu trên nền tảng Web – nhằm tận dụng tính tiện lợi, đa nền tảng – nhưng phải loại bỏ hoàn toàn sự phụ thuộc vào niềm tin đối với máy chủ lưu trữ.
 
 \section{Mục tiêu đồ án}
-Đồ án "Phần mềm quản lý mật khẩu an toàn AuraCrypt" nhằm đạt được các mục tiêu sau:
+Đồ án "Xây dựng ứng dụng quản lý mật khẩu Web AuraCrypt với kiến trúc Zero-Knowledge" hướng đến các mục tiêu cụ thể sau:
+
 \begin{itemize}
-    \item Thiết kế và triển khai một ứng dụng quản lý mật khẩu với khả năng mã hóa dữ liệu mạnh mẽ, đảm bảo tính bảo mật và toàn vẹn của thông tin.
-    \item Phát triển một giao diện người dùng trực quan, thân thiện, dễ sử dụng cho người dùng cuối.
-    \item Tích hợp các tính năng hỗ trợ như tạo mật khẩu mạnh, quản lý danh mục, tìm kiếm nhanh và sao lưu dữ liệu tự động.
-    \item Đảm bảo khả năng hoạt động trên nền tảng Windows dưới dạng một ứng dụng độc lập, không yêu cầu cài đặt thêm các thư viện Python.
+    \item \textbf{Nghiên cứu kiến trúc Zero-Knowledge:} Tìm hiểu và áp dụng mô hình bảo mật mà tại đó máy chủ (Server) không biết gì về dữ liệu thực tế của người dùng ngoài các chuỗi mã hóa nhị phân.
+    \item \textbf{Triển khai mã hóa phía máy khách (Client-side Encryption):} Sử dụng các chuẩn mật mã học hiện đại (Web Crypto API) để thực hiện toàn bộ quá trình mã hóa/giải mã ngay trên trình duyệt người dùng.
+    \item \textbf{Xây dựng ứng dụng Web hiện đại:} Phát triển ứng dụng SPA (Single Page Application) với React và TypeScript, đảm bảo hiệu năng cao và trải nghiệm người dùng (UX) tốt, xóa bỏ định kiến về việc ứng dụng bảo mật thường khó sử dụng.
+    \item \textbf{Tích hợp các tính năng bảo mật nâng cao:} Hiện thực hóa các tính năng như kiểm tra độ mạnh mật khẩu, kiểm tra lộ lọt dữ liệu (Data Breach Check) và chia sẻ mật khẩu an toàn.
 \end{itemize}
 
-\section{Tổng quan về AuraCrypt}
-AuraCrypt là một phần mềm quản lý mật khẩu được phát triển bằng Python sử dụng framework Flet. Phần mềm này cung cấp một kho lưu trữ an toàn cho các thông tin đăng nhập, bảo vệ chúng bằng thuật toán mã hóa AES-256-GCM. Người dùng có thể dễ dàng thêm, sửa, xóa, tìm kiếm và phân loại các mục nhập mật khẩu. AuraCrypt cũng bao gồm các tính năng như tạo mật khẩu ngẫu nhiên, tự động sao lưu dữ liệu và một quy trình thiết lập ban đầu thân thiện với người dùng.
+\section{Phạm vi đề tài}
+Đồ án tập trung vào việc phát triển một ứng dụng web (Web Application) hoàn chỉnh với các giới hạn phạm vi sau:
+
+\begin{itemize}
+    \item \textbf{Đối tượng sử dụng:} Người dùng cá nhân có nhu cầu lưu trữ mật khẩu, thông tin thẻ tín dụng và thông tin danh tính.
+    \item \textbf{Nền tảng:} Ứng dụng chạy trên các trình duyệt web hiện đại (Chrome, Edge, Firefox) hỗ trợ Web Crypto API.
+    \item \textbf{Công nghệ cốt lõi:}
+    \begin{itemize}
+        \item Frontend: React 19, TypeScript, Tailwind CSS.
+        \item Backend/Database: Supabase (PostgreSQL) đóng vai trò là nơi lưu trữ "mù" (blind storage).
+        \item Cryptography: AES-256-GCM cho mã hóa dữ liệu, PBKDF2 cho dẫn xuất khóa.
+    \end{itemize}
+    \item \textbf{Giới hạn:} Đồ án không bao gồm việc phát triển ứng dụng native mobile (iOS/Android) hay các tính năng quản lý nhóm/doanh nghiệp (SSO, LDAP).
+\end{itemize}
 
 \section{Cấu trúc báo cáo}
 Báo cáo này được cấu trúc thành 5 chương chính:
+
 \begin{itemize}
-    \item \textbf{Chương 1: Giới thiệu} - Trình bày bối cảnh, đặt vấn đề, mục tiêu và tổng quan về đồ án.
-    \item \textbf{Chương 2: Cơ sở lý thuyết} - Tổng hợp các kiến thức nền tảng về mật mã học, thuật toán mã hóa, quản lý mật khẩu và các công nghệ liên quan.
-    \item \textbf{Chương 3: Phân tích và thiết kế} - Chi tiết hóa các yêu cầu, phân tích hệ thống, kiến trúc phần mềm và thiết kế giao diện người dùng.
-    \item \textbf{Chương 4: Triển khai và thử nghiệm} - Mô tả quá trình hiện thực hóa các tính năng, công nghệ sử dụng và kết quả thử nghiệm.
-    \item \textbf{Chương 5: Kết luận và hướng phát triển} - Đánh giá tổng thể đồ án, những hạn chế và các định hướng phát triển trong tương lai.
+    \item \textbf{Chương 1: Giới thiệu} – Trình bày bối cảnh, lý do chọn đề tài, mục tiêu và phạm vi nghiên cứu của đồ án.
+    \item \textbf{Chương 2: Cơ sở lý thuyết} – Tổng hợp các kiến thức nền tảng về mật mã học (AES, PBKDF2), kiến trúc Zero-Knowledge và các công nghệ được sử dụng (React, Supabase).
+    \item \textbf{Chương 3: Phân tích và thiết kế} – Phân tích yêu cầu hệ thống, thiết kế cơ sở dữ liệu an toàn và mô hình luồng dữ liệu mã hóa.
+    \item \textbf{Chương 4: Triển khai và thử nghiệm} – Mô tả chi tiết quá trình hiện thực hóa mã nguồn, các thách thức kỹ thuật đã giải quyết và kết quả kiểm thử bảo mật.
+    \item \textbf{Chương 5: Kết luận và hướng phát triển} – Đánh giá kết quả đạt được so với mục tiêu ban đầu và đề xuất các hướng mở rộng trong tương lai.
 \end{itemize}
+
 \newpage
