@@ -55,10 +55,9 @@ Hệ thống được thiết kế để đáp ứng các nhu cầu quản lý m
 \subsection{Mô hình tổng quan}
 AuraCrypt Web hoạt động theo mô hình Client-Server nhưng với sự phân chia trách nhiệm đặc biệt về bảo mật.
 
-% // TODO: Chèn hình ảnh sơ đồ kiến trúc tổng quan (Client: React App <--> Internet <--> Server: Supabase)
 \begin{figure}[H]
     \centering
-    % \includegraphics[width=0.8\textwidth]{images/kientruc_tongquan.png}
+    \includegraphics[width=1\textwidth]{images/kientruc_tongquan.png}
     \caption{Mô hình kiến trúc hệ thống AuraCrypt}
     \label{fig:architecture}
 \end{figure}
@@ -81,13 +80,23 @@ AuraCrypt Web hoạt động theo mô hình Client-Server nhưng với sự phâ
 \subsection{Ranh giới tin cậy (Trust Boundary)}
 Điểm khác biệt cốt lõi của AuraCrypt là ranh giới tin cậy nằm ngay tại thiết bị người dùng. Mật khẩu chủ (Master Password) và Khóa mã hóa (Encryption Key) không bao giờ vượt qua ranh giới này để đi vào môi trường mạng.
 
-% // TODO: Chèn hình ảnh minh họa Trust Boundary (User -> Browser [Encryption] -> Network -> Cloud DB)
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{images/trust_boundary.png}
+    \caption{Sơ đồ Ranh giới tin cậy (Trust Boundary) trong AuraCrypt}
+    \label{fig:trust_boundary}
+\end{figure}
 
 \section{Thiết kế cơ sở dữ liệu}
 
 Cơ sở dữ liệu được thiết kế trên nền tảng PostgreSQL của Supabase. Do đặc thù bảo mật, thiết kế này phân tách rõ ràng giữa dữ liệu định danh (Metadata - có thể tìm kiếm) và dữ liệu bí mật (Secret Data - được mã hóa).
 
-% // TODO: Chèn hình ảnh ER Diagram (Sơ đồ thực thể liên kết) của 3 bảng bên dưới
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/database_schema.png}
+    \caption{Sơ đồ thực thể liên kết (ERD) của cơ sở dữ liệu AuraCrypt}
+    \label{fig:erd}
+\end{figure}
 
 \subsection{Bảng \texttt{entries} (Lưu trữ mật khẩu)}
 Đây là bảng chính lưu trữ thông tin các tài khoản của người dùng.
@@ -164,7 +173,12 @@ Quy trình này đảm bảo rằng chỉ khi người dùng nhập đúng Mật
     \item \textbf{Nếu giải mã thất bại (Exception):} Khóa sai. Ứng dụng báo lỗi "Sai mật khẩu" và không cho phép truy cập.
 \end{enumerate}
 
-% // TODO: Chèn hình ảnh Sequence Diagram cho quy trình Unlock Vault
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/sequence_unlock.png}
+    \caption{Biểu đồ trình tự quy trình xác thực và mở khóa két}
+    \label{fig:seq_unlock}
+\end{figure}
 
 \subsection{Quy trình Thêm mới Mật khẩu (Add Entry)}
 \begin{enumerate}
@@ -176,7 +190,12 @@ Quy trình này đảm bảo rằng chỉ khi người dùng nhập đúng Mật
     \item Supabase lưu trữ bản ghi và trả về xác nhận thành công.
 \end{enumerate}
 
-% // TODO: Chèn hình ảnh Sequence Diagram cho quy trình Add Entry
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/sequence_add_entry.png}
+    \caption{Biểu đồ trình tự quy trình mã hóa và thêm mới mật khẩu}
+    \label{fig:seq_add_entry}
+\end{figure}
 
 \subsection{Quy trình Chia sẻ An toàn (Secure Sharing)}
 Đây là tính năng đặc biệt giúp chia sẻ mật khẩu mà không lộ khóa chủ.
@@ -193,14 +212,35 @@ Quy trình này đảm bảo rằng chỉ khi người dùng nhập đúng Mật
 
 Giao diện được thiết kế theo phong cách hiện đại (Modern UI), tối giản và tập trung vào trải nghiệm người dùng, hỗ trợ chế độ tối (Dark Mode) để giảm mỏi mắt.
 
-\subsection{Màn hình Đăng nhập & Mở khóa (Auth & Vault Unlock)}
+\subsection{Màn hình Đăng nhập \& Mở khóa (Auth \& Vault Unlock)}
 Giao diện đầu tiên người dùng tiếp cận. Được chia làm hai trạng thái:
 \begin{itemize}
     \item \textbf{Xác thực tài khoản:} Form đăng nhập/đăng ký với Email.
     \item \textbf{Mở khóa Két:} Form nhập Mật khẩu chủ với biểu tượng ổ khóa lớn, tạo cảm giác an toàn.
 \end{itemize}
 
-% // TODO: Chèn ảnh chụp màn hình giao diện Login/Unlock
+% Chèn ảnh chụp màn hình thực tế
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/ui_login.png}
+        \caption{Giao diện Đăng nhập/Đăng ký}
+        \label{fig:ui_login}
+    \end{minipage}\hfill
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/ui_unlock.png}
+        \caption{Giao diện Mở khóa Két (Vault Unlock)}
+        \label{fig:ui_unlock}
+    \end{minipage}
+\end{figure}
+
+\noindent \textbf{Mô tả giao diện:}
+\begin{itemize}
+    \item \textbf{Giao diện Đăng nhập (Hình \ref{fig:ui_login}):} Thiết kế tối giản, tập trung vào khung nhập liệu. Người dùng có thể chuyển đổi linh hoạt giữa Đăng nhập và Đăng ký.
+    \item \textbf{Giao diện Mở khóa (Hình \ref{fig:ui_unlock}):} Sử dụng Modal (hộp thoại) nổi bật trên nền tối mờ để tập trung sự chú ý. Biểu tượng ổ khóa thay đổi trạng thái tùy theo chế độ (Setup hoặc Unlock). Nút "Reset Vault" được bố trí tinh tế để hỗ trợ trường hợp khẩn cấp.
+\end{itemize}
 
 \subsection{Màn hình Chính (Dashboard)}
 Trung tâm điều khiển của ứng dụng, bao gồm:
@@ -210,7 +250,12 @@ Trung tâm điều khiển của ứng dụng, bao gồm:
     \item \textbf{Danh sách thẻ (Grid/List view):} Hiển thị các tài khoản dưới dạng thẻ trực quan với logo thương hiệu (Favicon) tự động lấy từ URL.
 \end{itemize}
 
-% // TODO: Chèn ảnh chụp màn hình Dashboard chính
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/ui_dashboard.png}
+    \caption{Giao diện Dashboard}
+    \label{fig:ui_dashboard}
+\end{figure}
 
 \subsection{Màn hình Thêm/Sửa (Entry Modal)}
 Modal popup cho phép nhập liệu chi tiết.
@@ -220,15 +265,9 @@ Modal popup cho phép nhập liệu chi tiết.
     \item Hiển thị cảnh báo nếu người dùng nhập một mật khẩu yếu.
 \end{itemize}
 
-% // TODO: Chèn ảnh chụp màn hình Modal thêm mới
-
-\subsection{Tiện ích mở rộng (Browser Extension)}
-Phiên bản thu nhỏ của ứng dụng chạy trên góc trình duyệt, phục vụ tính năng tự động điền (Auto-fill).
-\begin{itemize}
-    \item Tự động phát hiện tên miền trang web đang mở.
-    \item Hiển thị các tài khoản tương ứng để điền nhanh chóng.
-\end{itemize}
-
-% // TODO: Chèn ảnh chụp giao diện Extension Popup
-
-\end{document}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/ui_add_entry.png}
+    \caption{Giao diện Thêm/Sửa (Entry Modal)}
+    \label{fig:ui_add_entry}
+\end{figure}

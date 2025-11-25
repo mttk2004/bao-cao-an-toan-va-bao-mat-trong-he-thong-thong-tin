@@ -92,12 +92,11 @@ Component \texttt{VaultUnlock.tsx} thực hiện cơ chế xác thực "Verify-b
     \item Nếu giải mã thất bại (Exception): Khóa sai $\rightarrow$ Báo lỗi và chặn truy cập.
 \end{itemize}
 
-% // TODO: Chèn hình ảnh giao diện Màn hình Mở khóa (VaultUnlock) và Màn hình Setup (khi user mới đăng ký)
 \begin{figure}[H]
     \centering
-    % \includegraphics[width=0.7\textwidth]{images/vault_unlock_ui.png}
+    \includegraphics[width=1\textwidth]{images/ui_unlock.png}
     \caption{Giao diện mở khóa két bảo mật}
-    \label{fig:unlock_ui}
+    \label{fig:ui_unlock}
 \end{figure}
 
 \subsection{Quản lý Dữ liệu và Đồng bộ hóa}
@@ -109,7 +108,12 @@ Dữ liệu được hiển thị trên Dashboard bao gồm:
     \item \textbf{Secret Data (Mã hóa):} Mật khẩu, Ghi chú, Thông tin thẻ. Những trường này được hiển thị dưới dạng `••••••' và chỉ hiện rõ khi người dùng yêu cầu (nút Eye icon).
 \end{itemize}
 
-% // TODO: Chèn hình ảnh giao diện Dashboard chính với danh sách mật khẩu
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/ui_dashboard.png}
+    \caption{Giao diện Dashboard}
+    \label{fig:ui_dashboard}
+\end{figure}
 
 \subsection{Tính năng Chia sẻ An toàn (Secure Sharing)}
 Tính năng này cho phép chia sẻ mật khẩu qua "Magic Link". Điểm đặc biệt là khóa giải mã được nhúng vào phần Hash của URL (\texttt{\#...}) nên không bao giờ được gửi lên Server.
@@ -127,7 +131,33 @@ const keyJson = await exportKeyToString(transientKey);
 const shareUrl = `${window.location.origin}/#share?id=${data.id}&key=${btoa(keyJson)}`;
 \end{lstlisting}
 
-% // TODO: Chèn hình ảnh giao diện Share Modal và Giao diện người nhận (Share View)
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/ui_share_modal.png}
+    \caption{Giao diện Share Modal}
+    \label{fig:ui_share_modal}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/ui_share_modal_2.png}
+    \caption{Giao diện Share Modal}
+    \label{fig:ui_share_modal_2}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/ui_share_view.png}
+    \caption{Giao diện Share View}
+    \label{fig:ui_share_view}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/ui_share_view_2.png}
+    \caption{Giao diện Share View}
+    \label{fig:ui_share_view_2}
+\end{figure}
 
 \section{Thử nghiệm và Đánh giá}
 
@@ -158,12 +188,24 @@ Hệ thống đã được kiểm thử với các kịch bản sử dụng th�
     \item \textbf{Tại Server:} Truy cập Dashboard quản trị của Supabase, kiểm tra bảng \texttt{entries}. Kết quả cho thấy các cột nhạy cảm đều chứa dữ liệu rác (ciphertext), chứng minh server không đọc được nội dung.
 \end{itemize}
 
-% // TODO: Chèn hình ảnh chụp Database Supabase (để chứng minh dữ liệu bị mã hóa) và hình ảnh Network Tab
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/network.jpg}
+    \caption{Payload gửi đi trong tab Network}
+    \label{fig:network}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/supabase.png}
+    \caption{Dữ liệu bảng entries trong Supabase}
+    \label{fig:supabase}
+\end{figure}
 
 \subsection{Đánh giá hiệu năng}
 \begin{itemize}
-    \item **Tốc độ mã hóa:** Với Web Crypto API, việc mã hóa/giải mã 100 bản ghi diễn ra trong thời gian dưới 200ms, gần như tức thì đối với trải nghiệm người dùng.
-    \item **Trải nghiệm người dùng:** Giao diện React phản hồi mượt mà. Các thao tác chuyển trang không cần tải lại (SPA). Chế độ Dark Mode hoạt động tốt, giảm mỏi mắt khi làm việc lâu.
+    \item \textbf{Tốc độ mã hóa}: Với Web Crypto API, việc mã hóa/giải mã 100 bản ghi diễn ra trong thời gian dưới 200ms, gần như tức thì đối với trải nghiệm người dùng.
+    \item \textbf{Trải nghiệm người dùng}: Giao diện React phản hồi mượt mà. Các thao tác chuyển trang không cần tải lại (SPA). Chế độ Dark Mode hoạt động tốt, giảm mỏi mắt khi làm việc lâu.
 \end{itemize}
 
 \newpage
