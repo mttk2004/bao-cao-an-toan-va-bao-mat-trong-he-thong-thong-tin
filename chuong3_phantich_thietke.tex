@@ -222,18 +222,16 @@ Giao diện đầu tiên người dùng tiếp cận. Được chia làm hai tr�
 % Chèn ảnh chụp màn hình thực tế
 \begin{figure}[H]
     \centering
-    \begin{minipage}{0.5\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{images/ui_login.png}
-        \caption{Giao diện Đăng nhập/Đăng ký}
-        \label{fig:ui_login}
-    \end{minipage}\hfill
-    \begin{minipage}{0.5\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{images/ui_unlock.png}
-        \caption{Giao diện Mở khóa Két (Vault Unlock)}
-        \label{fig:ui_unlock}
-    \end{minipage}
+    \includegraphics[width=1\textwidth]{images/ui_login.png}
+    \caption{Giao diện Đăng nhập/Đăng ký}
+    \label{fig:ui_login}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/ui_unlock.png}
+    \caption{Giao diện Mở khóa Két (Vault Unlock)}
+    \label{fig:ui_unlock}
 \end{figure}
 
 \noindent \textbf{Mô tả giao diện:}
@@ -270,4 +268,95 @@ Modal popup cho phép nhập liệu chi tiết.
     \includegraphics[width=1\textwidth]{images/ui_add_entry.png}
     \caption{Giao diện Thêm/Sửa (Entry Modal)}
     \label{fig:ui_add_entry}
+\end{figure}
+
+\subsection{Màn hình Quản lý Danh mục (Category Manager)}
+Để giúp người dùng tổ chức dữ liệu một cách khoa học, hệ thống cung cấp giao diện quản lý danh mục tùy chỉnh.
+\begin{itemize}
+    \item \textbf{Danh sách danh mục:} Hiển thị tất cả các danh mục hiện có (bao gồm danh mục mặc định và danh mục do người dùng tạo).
+    \item \textbf{Thao tác:} Cho phép thêm mới danh mục nhanh chóng và xóa các danh mục không còn sử dụng. Khi xóa một danh mục, hệ thống sẽ tự động xử lý các mục nhập (entries) thuộc danh mục đó để đảm bảo toàn vẹn dữ liệu.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/ui_category_manager.png}
+    \caption{Giao diện Quản lý Danh mục}
+    \label{fig:ui_category_manager}
+\end{figure}
+
+\subsection{Màn hình Kiểm tra Sức khỏe Mật khẩu (Password Health)}
+Đây là tính năng bảo mật nâng cao giúp người dùng đánh giá tổng quan về độ an toàn của kho dữ liệu. Giao diện được thiết kế trực quan với các biểu đồ và màu sắc cảnh báo.
+\begin{itemize}
+    \item \textbf{Điểm bảo mật (Security Score):} Biểu đồ tròn hiển thị điểm số tổng thể (0-100) dựa trên độ mạnh và tính duy nhất của các mật khẩu.
+    \item \textbf{Phân tích chi tiết:} Phân loại các rủi ro thành các nhóm:
+    \begin{itemize}
+        \item \textbf{Bị lộ (Compromised):} Phát hiện qua API k-Anonymity.
+        \item \textbf{Tái sử dụng (Reused):} Các tài khoản dùng chung một mật khẩu.
+        \item \textbf{Yếu (Weak):} Mật khẩu quá ngắn hoặc thiếu độ phức tạp.
+    \end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/ui_health_check.png}
+    \caption{Giao diện Báo cáo Sức khỏe Mật khẩu}
+    \label{fig:ui_health_check}
+\end{figure}
+
+\subsection{Màn hình Cài đặt (Settings)}
+Giao diện cài đặt được tổ chức thành 3 thẻ (tabs) riêng biệt để người dùng dễ dàng cấu hình hệ thống theo nhu cầu:
+
+\begin{itemize}
+    \item \textbf{Chung (General):}
+    \begin{itemize}
+        \item Cấu hình thời gian tự động khóa (Auto-lock timer) để bảo vệ dữ liệu khi người dùng rời khỏi máy tính.
+    \end{itemize}
+    
+    \item \textbf{Bảo mật (Security):}
+    \begin{itemize}
+        \item \textbf{Đổi Mật khẩu chủ:} Tính năng quan trọng nhất. Quy trình này yêu cầu nhập mật khẩu cũ để xác thực, sau đó hệ thống sẽ thực hiện giải mã toàn bộ dữ liệu và mã hóa lại bằng mật khẩu mới (Re-encryption) ngay tại phía máy khách.
+    \end{itemize}
+    
+    \item \textbf{Dữ liệu (Data):}
+    \begin{itemize}
+        \item \textbf{Xuất dữ liệu (Export):} Cho phép tải toàn bộ kho dữ liệu về máy dưới dạng file CSV (không mã hóa) để sao lưu offline.
+        \item \textbf{Nhập dữ liệu (Import):} Hỗ trợ nhập hàng loạt tài khoản từ file CSV, tự động mã hóa và đẩy lên cơ sở dữ liệu.
+    \end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/ui_settings_general.png}
+    \caption{Giao diện Cài đặt - Thẻ Chung}
+    \label{fig:ui_settings_general}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/ui_settings_security.png}
+    \caption{Giao diện Cài đặt - Thẻ Bảo mật (Đổi mật khẩu chủ)}
+    \label{fig:ui_settings_security}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/ui_settings_data.png}
+    \caption{Giao diện Cài đặt - Thẻ Dữ liệu (Import/Export)}
+    \label{fig:ui_settings_data}
+\end{figure}
+
+\subsection{Màn hình Giới thiệu (About)}
+Cung cấp thông tin minh bạch về ứng dụng để xây dựng niềm tin với người dùng.
+\begin{itemize}
+    \item Hiển thị phiên bản phần mềm hiện tại.
+    \item Giải thích ngắn gọn về kiến trúc Zero-Knowledge và quy trình mã hóa đang được áp dụng.
+    \item Liệt kê các công nghệ lõi (Tech Stack) được sử dụng trong dự án.
+    \item Thông tin liên hệ của tác giả và liên kết đến mã nguồn (nếu có).
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/ui_about.png}
+    \caption{Giao diện Giới thiệu thông tin ứng dụng}
+    \label{fig:ui_about}
 \end{figure}

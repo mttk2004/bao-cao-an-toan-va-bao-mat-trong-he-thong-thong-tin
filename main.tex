@@ -30,6 +30,10 @@
 \usepackage{xcolor}
 \usepackage{indentfirst}
 \usepackage{titlesec}
+\usepackage{qrcode} % Gói tạo mã QR
+% Thêm gói này để vẽ khung bìa
+\usepackage{tikz}
+\usetikzlibrary{calc}
 
 \setlength{\parindent}{15pt}
 \usepackage[unicode=true]{hyperref}
@@ -89,6 +93,21 @@
 
 % --- TRANG BÌA ---
 \begin{titlepage}
+    % --- VẼ KHUNG BÌA (Sử dụng TikZ) ---
+    \begin{tikzpicture}[remember picture, overlay]
+        % Khung ngoài (nét đậm)
+        \draw[line width=3pt] 
+            ($(current page.north west) + (2.0cm,-2.0cm)$) 
+            rectangle 
+            ($(current page.south east) + (-1.5cm,2.0cm)$);
+        % Khung trong (nét mảnh)
+        \draw[line width=1pt] 
+            ($(current page.north west) + (2.2cm,-2.2cm)$) 
+            rectangle 
+            ($(current page.south east) + (-1.7cm,2.2cm)$);
+    \end{tikzpicture}
+    % ------------------------------------
+
     \centering
     \sffamily
 
@@ -104,9 +123,8 @@
     {\Huge \textbf{BÁO CÁO}}\par
     \vspace{0.5cm}
     {\Large HỌC PHẦN: AN TOÀN VÀ BẢO MẬT DỮ LIỆU TRONG HỆ THỐNG THÔNG TIN}\par
-
+    
     \vspace{1cm}
-
     {\Huge \textbf{XÂY DỰNG ỨNG DỤNG QUẢN LÝ MẬT KHẨU WEB AURACRYPT VỚI KIẾN TRÚC ZERO-KNOWLEDGE}}\par
 
     \vfill
@@ -115,7 +133,7 @@
     \large
     \begin{tabular}{ll}
         \textbf{Giảng viên:} & Trương Tấn Khoa \\
-        \textbf{Nhóm thực hiện:} & 02 \\
+        \textbf{Nhóm thực hiện:} & 46 \\
     \end{tabular}
     \end{flushright}
 
@@ -128,6 +146,18 @@
 
     {\large Thành phố Hồ Chí Minh, tháng 11 năm 2025\par}
 \end{titlepage}
+
+% --- TRANG TRỐNG (Trang số 2) ---
+\newpage
+\thispagestyle{empty} % Không hiện số trang, không hiện header/footer
+\vspace*{\fill} % Đẩy nội dung xuống giữa theo chiều dọc
+\begin{center}
+    \textit{Trang này cố tình để trống}
+\end{center}
+\vspace*{\fill} % Đẩy nội dung lên giữa theo chiều dọc
+\newpage 
+% ------------------------------
+
 
 % --- CÁC TRANG ĐẦU ---
 \pagenumbering{roman}

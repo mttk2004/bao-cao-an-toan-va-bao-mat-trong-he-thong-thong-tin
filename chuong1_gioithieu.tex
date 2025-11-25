@@ -3,7 +3,11 @@
 \section{Đặt vấn đề}
 Trong kỷ nguyên số hóa, trung bình mỗi người dùng internet sở hữu hàng chục đến hàng trăm tài khoản trực tuyến. Việc quản lý số lượng lớn mật khẩu này đặt ra một thách thức lớn về an toàn thông tin. Người dùng thường có xu hướng tái sử dụng mật khẩu hoặc đặt mật khẩu đơn giản để dễ nhớ, dẫn đến nguy cơ cao bị tấn công qua các kỹ thuật như Credential Stuffing hay Brute-force.
 
+\vspace{0.5cm}
+
 Các giải pháp quản lý mật khẩu truyền thống (Password Managers) đã ra đời để giải quyết vấn đề này. Tuy nhiên, đa số các giải pháp trên nền tảng Web hiện nay hoạt động theo mô hình tin cậy máy chủ (Server-side trust), nơi nhà cung cấp dịch vụ nắm giữ chìa khóa để khôi phục hoặc truy cập dữ liệu người dùng. Điều này tạo ra một điểm yếu chí mạng: nếu máy chủ bị tấn công, toàn bộ kho dữ liệu mật khẩu của hàng triệu người dùng sẽ bị lộ dưới dạng văn bản rõ (plaintext) hoặc dễ dàng bị giải mã. Các vụ rò rỉ dữ liệu lớn từ các dịch vụ quản lý mật khẩu nổi tiếng trong những năm gần đây là minh chứng rõ ràng nhất cho rủi ro này.
+
+\vspace{0.5cm}
 
 Do đó, nhu cầu cấp thiết đặt ra là xây dựng một giải pháp quản lý mật khẩu trên nền tảng Web – nhằm tận dụng tính tiện lợi, đa nền tảng – nhưng phải loại bỏ hoàn toàn sự phụ thuộc vào niềm tin đối với máy chủ lưu trữ.
 

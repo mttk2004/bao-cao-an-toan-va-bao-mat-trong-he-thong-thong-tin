@@ -5,20 +5,22 @@ Chương này cung cấp một cái nhìn toàn diện về các nền tảng l�
 \section{Kiến trúc Zero-Knowledge (Không kiến thức)}
 
 \subsection{Khái niệm và sự ra đời}
-Trong mô hình bảo mật truyền thống (Server-side Encryption), khi bạn gửi một dữ liệu lên đám mây, máy chủ sẽ nắm giữ cả dữ liệu và chìa khóa để mở nó. Điều này giống như việc bạn gửi tiền vào ngân hàng và giao luôn chìa khóa két sắt cho nhân viên ngân hàng. Bạn phải đặt niềm tin tuyệt đối rằng nhân viên đó sẽ không tò mò mở két, hoặc ngân hàng sẽ không bị cướp. Tuy nhiên, lịch sử đã chứng minh "niềm tin" là mắt xích yếu nhất trong an ninh mạng qua hàng loạt vụ lộ lọt dữ liệu lớn (Yahoo, LinkedIn, Dropbox).
+Trong mô hình bảo mật truyền thống (Server-side Encryption), khi người dùng gửi một dữ liệu lên đám mây, máy chủ sẽ nắm giữ cả dữ liệu và chìa khóa để mở nó. Điều này giống như việc khách hàng gửi tiền vào ngân hàng và giao luôn chìa khóa két sắt cho nhân viên ngân hàng. Khách hàng phải đặt niềm tin tuyệt đối rằng nhân viên đó sẽ không tò mò mở két, hoặc ngân hàng sẽ không bị cướp. Tuy nhiên, lịch sử đã chứng minh "niềm tin" là mắt xích yếu nhất trong an ninh mạng qua hàng loạt vụ lộ lọt dữ liệu lớn (như vụ rò rỉ của Yahoo, LinkedIn hay Dropbox).
 
-Kiến trúc **Zero-Knowledge** (hay còn gọi là Client-side Encryption) ra đời để giải quyết vấn đề "niềm tin" này. Thuật ngữ này ám chỉ việc nhà cung cấp dịch vụ (Service Provider) có "kiến thức bằng không" (zero knowledge) về dữ liệu thực tế của người dùng.
+\vspace{0.5cm}
+
+Kiến trúc \textbf{Zero-Knowledge} (hay còn gọi là Client-side Encryption) ra đời để giải quyết vấn đề "niềm tin" này. Thuật ngữ này ám chỉ việc nhà cung cấp dịch vụ (Service Provider) có "kiến thức bằng không" (zero knowledge) về dữ liệu thực tế của người dùng.
 
 \subsection{Cơ chế hoạt động đơn giản hóa}
-Hãy tưởng tượng AuraCrypt hoạt động như sau:
+Hãy tưởng tượng quy trình hoạt động của AuraCrypt như sau:
 \begin{enumerate}
-    \item Trước khi rời khỏi máy tính của bạn, dữ liệu được bỏ vào một chiếc hộp sắt và khóa lại.
-    \item Chiếc chìa khóa (Master Password) nằm trong túi của bạn và \textbf{không bao giờ} được gửi đi đâu cả.
+    \item Trước khi rời khỏi máy tính của người dùng, dữ liệu được bỏ vào một chiếc hộp sắt và khóa lại bằng một chìa khóa đặc biệt.
+    \item Chiếc chìa khóa này (được tạo ra từ Mật khẩu chủ - Master Password) nằm trong túi của người dùng và \textbf{không bao giờ} được gửi đi đâu cả.
     \item Chiếc hộp sắt (đã khóa) được gửi lên máy chủ (Supabase) để lưu trữ.
-    \item Khi bạn cần dùng, máy chủ trả lại chiếc hộp sắt. Bạn dùng chìa khóa trong túi mình để mở ra.
+    \item Khi cần sử dụng, máy chủ trả lại chiếc hộp sắt. Người dùng dùng chìa khóa trong túi mình để mở ra ngay trên trình duyệt.
 \end{enumerate}
 
-Nếu máy chủ bị tấn công (hacker đột nhập vào kho lưu trữ), chúng chỉ lấy được những chiếc hộp sắt không thể mở. Đây chính là giá trị cốt lõi mà AuraCrypt hướng tới.
+Nếu máy chủ bị tấn công (hacker đột nhập vào kho lưu trữ), chúng chỉ lấy được những chiếc hộp sắt vĩnh viễn không thể mở. Đây chính là giá trị cốt lõi mà AuraCrypt hướng tới.
 
 \section{Các thuật toán mật mã học nền tảng}
 
@@ -26,53 +28,75 @@ Nếu máy chủ bị tấn công (hacker đột nhập vào kho lưu trữ), ch
 \subsubsection{Lịch sử và bối cảnh ra đời}
 Vào những năm 1970, thế giới sử dụng chuẩn mã hóa DES (Data Encryption Standard). Tuy nhiên, đến cuối thập niên 90, sức mạnh máy tính tăng lên nhanh chóng khiến DES (với khóa 56-bit quá ngắn) trở nên lỗi thời và dễ bị bẻ khóa. Năm 1997, Viện Tiêu chuẩn và Công nghệ Quốc gia Hoa Kỳ (NIST) đã tổ chức một cuộc thi toàn cầu để tìm kiếm người kế nhiệm.
 
-Năm 2001, thuật toán **Rijndael** do hai nhà mật mã học người Bỉ (Joan Daemen và Vincent Rijmen) phát triển đã chiến thắng và trở thành chuẩn AES (Advanced Encryption Standard). Nó được thiết kế để vừa bảo mật cực cao, vừa chạy nhanh trên cả phần cứng hạn chế (như thẻ từ, điện thoại) và siêu máy tính.
+\vspace{0.5cm}
+
+Năm 2001, thuật toán \textbf{Rijndael} do hai nhà mật mã học người Bỉ (Joan Daemen và Vincent Rijmen) phát triển đã chiến thắng và trở thành chuẩn AES (Advanced Encryption Standard). Nó được thiết kế để vừa bảo mật cực cao, vừa chạy nhanh trên cả phần cứng hạn chế (như thẻ từ, điện thoại) và siêu máy tính.
 
 \subsubsection{Tại sao AuraCrypt chọn AES-256-GCM?}
 AuraCrypt sử dụng phiên bản mạnh nhất là AES-256 kết hợp với chế độ GCM:
 \begin{itemize}
-    \item **Độ dài khóa 256-bit:** Hãy hình dung, nếu dùng siêu máy tính mạnh nhất hiện nay để thử từng chìa khóa một (Brute-force), thời gian cần thiết để bẻ khóa AES-256 sẽ lớn hơn cả tuổi thọ của vũ trụ. Điều này đảm bảo dữ liệu an toàn trong nhiều thập kỷ tới.
-    \item **Chế độ GCM (Galois/Counter Mode):** Mã hóa thông thường chỉ giúp che giấu nội dung (Bí mật). Nhưng nếu hacker không đọc được, chúng có thể phá hoại bằng cách đổi ngẫu nhiên vài bit trong file mã hóa để làm hỏng dữ liệu gốc. Chế độ GCM giải quyết việc này bằng cách gắn thêm một "con tem niêm phong kỹ thuật số" (Authentication Tag). Khi giải mã, nếu "con tem" bị rách (dữ liệu bị sửa đổi), hệ thống sẽ từ chối mở khóa ngay lập tức.
+    \item \textbf{Độ dài khóa 256-bit:} Hãy hình dung, nếu dùng siêu máy tính mạnh nhất hiện nay để thử từng chìa khóa một (Brute-force), thời gian cần thiết để bẻ khóa AES-256 sẽ lớn hơn cả tuổi thọ của vũ trụ. Điều này đảm bảo dữ liệu an toàn trong nhiều thập kỷ tới.
+    \item \textbf{Chế độ GCM (Galois/Counter Mode):} Mã hóa thông thường chỉ giúp che giấu nội dung (tính Bí mật). Nhưng nếu hacker không đọc được, chúng có thể phá hoại bằng cách đổi ngẫu nhiên vài bit trong file mã hóa để làm hỏng dữ liệu gốc khi giải mã. Chế độ GCM giải quyết việc này bằng cách gắn thêm một "con tem niêm phong kỹ thuật số" (Authentication Tag). Khi giải mã, nếu "con tem" bị rách (dữ liệu bị sửa đổi dù chỉ 1 bit), hệ thống sẽ từ chối mở khóa ngay lập tức, đảm bảo tính Toàn vẹn (Integrity).
 \end{itemize}
 
 \subsection{PBKDF2 (Password-Based Key Derivation Function 2)}
 \subsubsection{Vấn đề của mật khẩu con người}
-Con người rất tệ trong việc tạo ra những chuỗi ngẫu nhiên. Chúng ta thường đặt mật khẩu như "123456", "password@123". Trong khi đó, thuật toán AES cần một khóa 256-bit hoàn toàn ngẫu nhiên và hỗn loạn. Nếu dùng trực tiếp mật khẩu yếu của người dùng làm khóa, hacker có thể đoán ra trong tích tắc.
+Con người rất tệ trong việc tạo ra những chuỗi ngẫu nhiên. Chúng ta thường đặt mật khẩu dễ nhớ như "123456", "password@123". Trong khi đó, thuật toán AES cần một khóa 256-bit hoàn toàn ngẫu nhiên và hỗn loạn. Nếu dùng trực tiếp mật khẩu yếu của người dùng làm khóa mã hóa, hacker có thể đoán ra trong tích tắc.
 
 \subsubsection{Giải pháp "kéo giãn" khóa}
-PBKDF2 ra đời để làm cầu nối giữa "mật khẩu yếu của con người" và "khóa mạnh cho máy tính". Nó hoạt động theo nguyên lý: **"Làm chậm kẻ tấn công"**.
+PBKDF2 ra đời để làm cầu nối giữa "mật khẩu yếu của con người" và "khóa mạnh cho máy tính". Nó hoạt động theo nguyên lý: \textbf{"Làm chậm kẻ tấn công"}.
+
+\vspace{0.5cm}
 
 Trong AuraCrypt, quy trình này diễn ra như sau:
 \begin{itemize}
-    \item **Muối (Salt):** Mỗi người dùng được cấp một chuỗi ký tự ngẫu nhiên duy nhất gọi là "Muối". Muối giúp đảm bảo rằng dù hai người có mật khẩu giống hệt nhau (ví dụ cùng là "123456"), khóa mã hóa tạo ra vẫn sẽ hoàn toàn khác nhau. Điều này chống lại việc hacker dùng một bảng từ điển (Rainbow Table) để tấn công hàng loạt tài khoản cùng lúc.
-    \item **Vòng lặp (Iterations):** AuraCrypt áp dụng 100.000 vòng lặp băm (SHA-256). Để tạo ra khóa, máy tính phải thực hiện phép tính này 100.000 lần. Với người dùng chính chủ, việc này chỉ mất 0.1 giây (chấp nhận được). Nhưng với hacker muốn thử 1 tỷ mật khẩu/giây, việc bị làm chậm đi 100.000 lần sẽ khiến chi phí tấn công trở nên quá đắt đỏ và bất khả thi.
+    \item \textbf{Muối (Salt):} Mỗi người dùng được cấp một chuỗi ký tự ngẫu nhiên duy nhất gọi là "Muối". Muối giúp đảm bảo rằng dù hai người có mật khẩu giống hệt nhau (ví dụ cùng là "123456"), khóa mã hóa tạo ra vẫn sẽ hoàn toàn khác nhau. Điều này chống lại việc hacker dùng một bảng từ điển (Rainbow Table) để tấn công hàng loạt tài khoản cùng lúc.
+    \item \textbf{Vòng lặp (Iterations):} AuraCrypt áp dụng 100.000 vòng lặp băm (SHA-256). Để tạo ra khóa, máy tính phải thực hiện phép tính này 100.000 lần. Với người dùng chính chủ, việc này chỉ mất khoảng 0.1 giây (chấp nhận được). Nhưng với hacker muốn thử 1 tỷ mật khẩu/giây, việc bị làm chậm đi 100.000 lần sẽ khiến chi phí tấn công (tiền điện, phần cứng) trở nên quá đắt đỏ và bất khả thi.
 \end{itemize}
 
 \section{Các kỹ thuật bảo mật nâng cao}
 
 \subsection{k-Anonymity (Tính ẩn danh trong đám đông)}
-Một tính năng quan trọng của AuraCrypt là kiểm tra xem mật khẩu của bạn có bị lộ trong các vụ rò rỉ dữ liệu quá khứ hay không (Password Health Check). Tuy nhiên, làm sao để kiểm tra mà không gửi mật khẩu của bạn cho bên thứ ba? Đây là lúc **k-Anonymity** phát huy tác dụng.
+Một tính năng quan trọng của AuraCrypt là kiểm tra xem mật khẩu của bạn có bị lộ trong các vụ rò rỉ dữ liệu quá khứ hay không (Password Health Check). Tuy nhiên, làm sao để kiểm tra mà không gửi mật khẩu của bạn cho bên thứ ba (dịch vụ Have I Been Pwned)? Đây là lúc \textbf{k-Anonymity} phát huy tác dụng.
 
 \subsubsection{Nguyên lý hoạt động}
-Thay vì gửi mật khẩu "mypassword", AuraCrypt băm nó thành chuỗi mã hóa (ví dụ: \texttt{5BAA6...}). Chúng tôi chỉ gửi \textbf{5 ký tự đầu tiên} (\texttt{5BAA6}) lên dịch vụ kiểm tra (Have I Been Pwned). Dịch vụ này sẽ trả về danh sách hàng trăm mật khẩu khác nhau có cùng 5 ký tự đầu đó.
+Thay vì gửi mật khẩu thô (ví dụ: "mypassword"), AuraCrypt băm nó thành chuỗi mã hóa SHA-1 (ví dụ: \texttt{5BAA6...}). Chúng tôi chỉ gửi \textbf{5 ký tự đầu tiên} (\texttt{5BAA6}) lên dịch vụ kiểm tra. Dịch vụ này sẽ trả về danh sách hàng trăm mật khẩu khác nhau có cùng 5 ký tự đầu đó.
 
-Trình duyệt của bạn sau đó sẽ âm thầm kiểm tra trong danh sách tải về xem có cái nào khớp hoàn toàn với mật khẩu của bạn không.
+\vspace{0.5cm}
+
+Trình duyệt của người dùng sau đó sẽ âm thầm kiểm tra trong danh sách tải về xem có cái nào khớp hoàn toàn với phần còn lại của mã băm mật khẩu hay không.
 \begin{itemize}
-    \item **Kết quả:** Bạn biết được mật khẩu mình có an toàn không.
-    \item **Bảo mật:** Dịch vụ kiểm tra không bao giờ biết chính xác bạn đang dùng mật khẩu nào, vì họ nhận được yêu cầu giống hệt nhau từ hàng ngàn người có cùng 5 ký tự đầu mã băm. Đây là nguyên lý "ẩn mình trong đám đông".
+    \item \textbf{Kết quả:} Người dùng biết được mật khẩu mình có an toàn không.
+    \item \textbf{Bảo mật:} Dịch vụ kiểm tra không bao giờ biết chính xác người dùng đang dùng mật khẩu nào, vì họ nhận được yêu cầu giống hệt nhau từ hàng ngàn người có cùng 5 ký tự đầu mã băm. Đây là nguyên lý "ẩn mình trong đám đông".
 \end{itemize}
 
 \section{Công nghệ phát triển ứng dụng}
 
-\subsection{React và TypeScript: Nền tảng hiện đại}
-AuraCrypt được xây dựng như một ứng dụng Single Page Application (SPA) sử dụng **React 19**.
+\subsection{Web Crypto API: Trái tim bảo mật}
+Đây là thành phần quan trọng nhất giúp AuraCrypt thực hiện kiến trúc Zero-Knowledge ngay trên trình duyệt web. Trước đây, việc mã hóa trên JavaScript thường bị coi là không an toàn do hiệu năng kém và dễ bị tấn công qua kênh kề (side-channel attacks). \textbf{Web Crypto API} ra đời để giải quyết vấn đề này.
+
+\subsubsection{Đặc điểm kỹ thuật}
+Web Crypto API là một giao diện lập trình tiêu chuẩn W3C, cung cấp các nguyên ngữ mật mã học (cryptographic primitives) được tích hợp sâu trong nhân của trình duyệt (Chrome, Firefox, Edge...). Các thuật toán này không chạy bằng JavaScript mà được thực thi bởi mã máy (thường là C++ hoặc Rust) của trình duyệt, mang lại hai lợi ích lớn:
 \begin{itemize}
-    \item **React (User Interface):** Giúp chia nhỏ giao diện thành các thành phần độc lập (Component) như: Ô nhập liệu, Thẻ hiển thị mật khẩu, Modal... giúp việc phát triển nhanh chóng, mã nguồn dễ bảo trì và trải nghiệm người dùng mượt mà như ứng dụng Desktop.
-    \item **TypeScript:** Là phiên bản nâng cấp của JavaScript với tính năng kiểm tra kiểu dữ liệu nghiêm ngặt. Trong một ứng dụng bảo mật, việc nhầm lẫn giữa một "chuỗi mật khẩu" và một "đối tượng mật khẩu" có thể gây ra lỗi nghiêm trọng. TypeScript giúp ngăn chặn những lỗi này ngay từ lúc viết mã.
+    \item \textbf{Tốc độ:} Nhanh hơn hàng chục lần so với các thư viện JS thuần túy.
+    \item \textbf{An toàn:} Bộ nhớ chứa khóa được quản lý bởi trình duyệt, khó bị truy xuất trái phép hơn. Sử dụng bộ sinh số ngẫu nhiên an toàn mã hóa (CSPRNG) thay vì \texttt{Math.random()} vốn dễ đoán.
 \end{itemize}
 
-\subsection{Web Crypto API: Trái tim bảo mật}
-Thay vì sử dụng các thư viện mã hóa bên ngoài (thường viết bằng JavaScript và có thể chạy chậm hoặc chứa lỗi bảo mật tiềm ẩn), AuraCrypt sử dụng trực tiếp **Web Crypto API**. Đây là bộ công cụ mật mã học được tích hợp sâu trong trình duyệt (Chrome, Firefox, Edge...), được viết bằng ngôn ngữ C++ và được tối ưu hóa bởi chính các kỹ sư của Google/Mozilla. Điều này đảm bảo các phép toán AES hay PBKDF2 chạy với tốc độ cực nhanh và độ an toàn cao nhất mà trình duyệt có thể cung cấp.
+\subsubsection{Ứng dụng trong AuraCrypt}
+AuraCrypt sử dụng triệt để các hàm sau của Web Crypto API:
+\begin{itemize}
+    \item \texttt{window.crypto.getRandomValues()}: Để sinh ra Vector khởi tạo (IV) ngẫu nhiên 12 bytes cho mỗi lần mã hóa, đảm bảo hai lần mã hóa cùng một dữ liệu sẽ cho ra hai kết quả khác nhau.
+    \item \texttt{window.crypto.subtle.importKey()}: Chuyển đổi chuỗi mật khẩu thô của người dùng thành định dạng khóa (KeyMaterial) mà trình duyệt có thể xử lý.
+    \item \texttt{window.crypto.subtle.deriveKey()}: Thực thi thuật toán PBKDF2 để dẫn xuất khóa chính thức từ KeyMaterial và Salt.
+    \item \texttt{window.crypto.subtle.encrypt()} và \texttt{decrypt()}: Thực thi thuật toán AES-GCM để mã hóa và giải mã dữ liệu JSON.
+\end{itemize}
+
+\subsection{React và TypeScript: Nền tảng hiện đại}
+AuraCrypt được xây dựng như một ứng dụng Single Page Application (SPA) sử dụng \textbf{React 19}.
+\begin{itemize}
+    \item \textbf{React (User Interface):} Giúp chia nhỏ giao diện thành các thành phần độc lập (Component) như: Ô nhập liệu, Thẻ hiển thị mật khẩu, Modal... giúp việc phát triển nhanh chóng, mã nguồn dễ bảo trì và trải nghiệm người dùng mượt mà như ứng dụng Desktop.
+    \item \textbf{TypeScript:} Là phiên bản nâng cấp của JavaScript với tính năng kiểm tra kiểu dữ liệu nghiêm ngặt. Trong một ứng dụng bảo mật, việc nhầm lẫn giữa một "chuỗi mật khẩu" (string) và một "mảng byte" (ArrayBuffer) có thể gây ra lỗi mã hóa nghiêm trọng. TypeScript giúp ngăn chặn những lỗi này ngay từ lúc viết mã, đảm bảo tính đúng đắn của luồng dữ liệu.
+\end{itemize}
 
 \subsection{Supabase: Hạ tầng đám mây}
-Supabase được chọn làm Backend cho AuraCrypt vì tính năng **Row Level Security (RLS)**. RLS cho phép chúng ta lập trình các quy tắc bảo mật ngay tại tầng cơ sở dữ liệu: "Chỉ người dùng sở hữu dòng dữ liệu này mới có quyền Xóa hoặc Sửa nó". Điều này tạo ra một lớp bảo vệ thứ hai, ngay cả khi tầng ứng dụng (React) có lỗ hổng, dữ liệu trong Database vẫn được bảo vệ bởi chính nó.
+Supabase được chọn làm Backend cho AuraCrypt vì tính năng \textbf{Row Level Security (RLS)}. RLS cho phép chúng ta lập trình các quy tắc bảo mật ngay tại tầng cơ sở dữ liệu PostgreSQL: "Chỉ người dùng sở hữu dòng dữ liệu này mới có quyền Xóa hoặc Sửa nó". Điều này tạo ra một lớp bảo vệ thứ hai, ngay cả khi tầng ứng dụng (React) có lỗ hổng, dữ liệu trong Database vẫn được bảo vệ bởi chính nó.
